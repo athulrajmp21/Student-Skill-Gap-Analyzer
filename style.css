@@ -13,6 +13,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Montserrat";
+    transition: 0.2s ease-in-out;
 }
 
 body{
@@ -48,12 +49,15 @@ body{
 
 .form-box label{
     font-weight: 500;
+    font-size: 1.05rem;
+    font-weight: 700;
 }
 
 .form-box input, .form-box select{
-    padding: 5px;
+    padding: 10px;
     border: none;
     border-radius: 5px;
+    font-size: 0.9rem;
 }
 
 
@@ -63,12 +67,22 @@ body{
     gap: 2px;
 }
 
-.other-group{
-    display: none;
+
+.other-group {
+    display: flex;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: -20px; /* offsets the .form-box gap: 20px when hidden */
+    pointer-events: none;
+    transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.35s ease;
 }
 
-.form-group:has(option[value="others"]:checked) ~ .other-group{
-    display: flex;
+.form-group:has(option[value="others"]:checked) ~ .other-group {
+    max-height: 100px; /* set slightly higher than the input's actual height */
+    opacity: 1;
+    margin-top: 0;
+    pointer-events: auto;
 }
 
 .container>form>button{
