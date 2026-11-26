@@ -26,7 +26,7 @@ body{
     color: var(--color-primary);
 }
 
-.container{
+.create-account-container{
     min-width: 400px;
     
 }
@@ -67,7 +67,6 @@ body{
     gap: 2px;
 }
 
-
 .other-group {
     display: flex;
     max-height: 0;
@@ -85,7 +84,7 @@ body{
     pointer-events: auto;
 }
 
-.container>form>button{
+.create-account-container>form>button{
     width: 100%;
     padding: 10px;
     margin-top: 10px;
