@@ -30,7 +30,7 @@
     </header>
 
     <main>
-      <!-- Hero Section (GitHub-style Product Intro + Interactive UI Preview) -->
+      <!-- Hero Section (Product Intro + Interactive UI Preview) -->
       <section class="hero-section">
         <div class="container hero-grid">
           <div class="hero-content">
@@ -67,57 +67,69 @@
             </div>
           </div>
 
-          <!-- Product UI Showcase Mockup -->
-          <div class="hero-showcase" aria-hidden="true">
+          <!-- Interactive Product UI Showcase Mockup -->
+          <div class="hero-showcase">
             <div class="window-frame">
               <div class="window-topbar">
                 <div class="window-dots">
                   <span></span><span></span><span></span>
                 </div>
-                <span class="window-title">skillgap-analyzer — readiness-report.json</span>
+                <span class="window-title">interactive-demo — readiness-report.json</span>
               </div>
 
-              <div class="window-body">
+              <!-- Interactive Role Switcher Tabs -->
+              <div class="demo-tabs" role="tablist" aria-label="Preview role benchmarks">
+                <button
+                  type="button"
+                  class="demo-tab active"
+                  role="tab"
+                  aria-selected="true"
+                  data-demo-role="developer"
+                >
+                  Developer
+                </button>
+                <button
+                  type="button"
+                  class="demo-tab"
+                  role="tab"
+                  aria-selected="false"
+                  data-demo-role="designer"
+                >
+                  Designer
+                </button>
+                <button
+                  type="button"
+                  class="demo-tab"
+                  role="tab"
+                  aria-selected="false"
+                  data-demo-role="manager"
+                >
+                  Manager
+                </button>
+              </div>
+
+              <div class="window-body" id="demoWindowBody">
                 <div class="mock-header">
                   <div>
-                    <span class="mock-tag">Target Role</span>
-                    <h3>Full-Stack Developer</h3>
+                    <span class="mock-tag">Live Preview</span>
+                    <h3 id="demoRoleTitle">Developer</h3>
                   </div>
-                  <span class="mock-score-badge">2 / 3 Required</span>
+                  <span class="mock-score-badge" id="demoCoverageBadge">2 / 3 Required</span>
                 </div>
 
-                <div class="mock-alert">
-                  <strong>Missing Core Skill:</strong> Git
+                <!-- Interactive Missing Skill Banner -->
+                <div class="mock-alert" id="demoMissingAlert">
+                  <span id="demoMissingText"><strong>Missing Core Skill:</strong> Git</span>
+                  <button type="button" class="mock-fix-btn" id="demoFixBtn">
+                    + Add Skill
+                  </button>
                 </div>
 
-                <div class="mock-skill-rows">
-                  <div class="mock-skill-row">
-                    <div class="mock-skill-meta">
-                      <span>JavaScript <em class="mock-req">Required</em></span>
-                      <span>4 / 5 · Advanced</span>
-                    </div>
-                    <div class="mock-bar"><div style="width: 80%"></div></div>
-                  </div>
-
-                  <div class="mock-skill-row">
-                    <div class="mock-skill-meta">
-                      <span>HTML &amp; CSS <em class="mock-req">Required</em></span>
-                      <span>5 / 5 · Expert</span>
-                    </div>
-                    <div class="mock-bar"><div style="width: 100%"></div></div>
-                  </div>
-
-                  <div class="mock-skill-row">
-                    <div class="mock-skill-meta">
-                      <span>React</span>
-                      <span>3 / 5 · Intermediate</span>
-                    </div>
-                    <div class="mock-bar"><div style="width: 60%"></div></div>
-                  </div>
-                </div>
+                <!-- Animated Proficiency Bars -->
+                <div class="mock-skill-rows" id="demoSkillRows"></div>
 
                 <div class="mock-footer">
-                  <code>{ "coverage": "67%", "readyForExport": true }</code>
+                  <code id="demoJsonFooter">{ "role": "developer", "coverage": "67%", "readyForExport": true }</code>
                 </div>
               </div>
             </div>
@@ -266,7 +278,7 @@
         <div class="container">
           <div class="cta-banner">
             <h2>Ready to map your skill gaps?</h2>
-            <p>Takes less than two minutes. Runs 100% locally in your browser.</p>
+            <p>Takes less than two minutes. Runs locally in your browser.</p>
             <a href="onboarding.html" class="btn-cta-light" id="bottomStartBtn">
               Open Skill Gap Analyzer →
             </a>
@@ -285,13 +297,160 @@
     <script>
       const STORAGE_KEY = "account_onboarding_state_v1";
 
+      const ratingLabels = {
+        1: "Beginner",
+        2: "Basic",
+        3: "Intermediate",
+        4: "Advanced",
+        5: "Expert"
+      };
+
+      // Interactive Hero Preview Data
+      const demoPresets = {
+        developer: {
+          title: "Developer",
+          totalRequired: 3,
+          missingSkill: { name: "Git", defaultRating: 4 },
+          missingResolved: false,
+          skills: [
+            { name: "JavaScript", required: true, rating: 4 },
+            { name: "HTML & CSS", required: true, rating: 5 },
+            { name: "React", required: false, rating: 3 }
+          ]
+        },
+        designer: {
+          title: "Designer",
+          totalRequired: 3,
+          missingSkill: { name: "Wireframing", defaultRating: 4 },
+          missingResolved: false,
+          skills: [
+            { name: "Figma", required: true, rating: 5 },
+            { name: "UI/UX Design", required: true, rating: 4 },
+            { name: "Design Systems", required: false, rating: 3 }
+          ]
+        },
+        manager: {
+          title: "Manager",
+          totalRequired: 3,
+          missingSkill: { name: "Communication", defaultRating: 5 },
+          missingResolved: false,
+          skills: [
+            { name: "Project Management", required: true, rating: 4 },
+            { name: "Agile", required: true, rating: 4 },
+            { name: "Roadmapping", required: false, rating: 3 }
+          ]
+        }
+      };
+
+      let activeDemoRole = "developer";
+
+      const demoTabs = document.querySelectorAll(".demo-tab");
+      const demoWindowBody = document.getElementById("demoWindowBody");
+      const demoRoleTitle = document.getElementById("demoRoleTitle");
+      const demoCoverageBadge = document.getElementById("demoCoverageBadge");
+      const demoMissingAlert = document.getElementById("demoMissingAlert");
+      const demoMissingText = document.getElementById("demoMissingText");
+      const demoFixBtn = document.getElementById("demoFixBtn");
+      const demoSkillRows = document.getElementById("demoSkillRows");
+      const demoJsonFooter = document.getElementById("demoJsonFooter");
+
+      function renderHeroDemo(roleKey, animate = true) {
+        activeDemoRole = roleKey;
+        const data = demoPresets[roleKey];
+
+        // Update active tab styling
+        demoTabs.forEach((tab) => {
+          const isMatch = tab.dataset.demoRole === roleKey;
+          tab.classList.toggle("active", isMatch);
+          tab.setAttribute("aria-selected", String(isMatch));
+        });
+
+        if (animate) {
+          demoWindowBody.classList.remove("demo-fade");
+          void demoWindowBody.offsetWidth;
+          demoWindowBody.classList.add("demo-fade");
+        }
+
+        demoRoleTitle.textContent = data.title;
+
+        // Build current skill list (including resolved missing skill if clicked)
+        const currentSkills = [...data.skills];
+        if (data.missingResolved) {
+          currentSkills.splice(2, 0, {
+            name: data.missingSkill.name,
+            required: true,
+            rating: data.missingSkill.defaultRating
+          });
+        }
+
+        const matchedCount = data.missingResolved
+          ? data.totalRequired
+          : data.totalRequired - 1;
+        const pct = Math.round((matchedCount / data.totalRequired) * 100);
+
+        demoCoverageBadge.textContent = `${matchedCount} / ${data.totalRequired} Required`;
+        demoCoverageBadge.classList.toggle("is-complete", data.missingResolved);
+
+        // Missing Alert Banner
+        if (data.missingResolved) {
+          demoMissingAlert.classList.add("is-resolved");
+          demoMissingText.innerHTML = `<strong>All Required Skills Met:</strong> ${data.missingSkill.name} added`;
+          demoFixBtn.textContent = "Reset";
+        } else {
+          demoMissingAlert.classList.remove("is-resolved");
+          demoMissingText.innerHTML = `<strong>Missing Core Skill:</strong> ${data.missingSkill.name}`;
+          demoFixBtn.textContent = "+ Add Skill";
+        }
+
+        // Render Skill Rows
+        demoSkillRows.innerHTML = "";
+        currentSkills.forEach((item) => {
+          const row = document.createElement("div");
+          row.className = "mock-skill-row";
+          row.innerHTML = `
+            <div class="mock-skill-meta">
+              <span>
+                ${item.name}
+                ${item.required ? '<em class="mock-req">Required</em>' : ""}
+              </span>
+              <span>${item.rating} / 5 · ${ratingLabels[item.rating]}</span>
+            </div>
+            <div class="mock-bar">
+              <div style="width: ${item.rating * 20}%"></div>
+            </div>
+          `;
+          demoSkillRows.appendChild(row);
+        });
+
+        demoJsonFooter.textContent = `{ "role": "${roleKey}", "coverage": "${pct}%", "skills": ${currentSkills.length} }`;
+      }
+
+      demoTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          if (tab.dataset.demoRole !== activeDemoRole) {
+            renderHeroDemo(tab.dataset.demoRole, true);
+          }
+        });
+      });
+
+      demoFixBtn.addEventListener("click", () => {
+        const current = demoPresets[activeDemoRole];
+        current.missingResolved = !current.missingResolved;
+        renderHeroDemo(activeDemoRole, false);
+      });
+
+      // Check Saved LocalStorage Profile
       function checkSavedProfile() {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
           if (!raw) return;
           const saved = JSON.parse(raw);
 
-          if (!saved.name && !saved.role && (!saved.selectedSkills || saved.selectedSkills.length === 0)) {
+          if (
+            !saved.name &&
+            !saved.role &&
+            (!saved.selectedSkills || saved.selectedSkills.length === 0)
+          ) {
             return;
           }
 
@@ -303,10 +462,16 @@
           badge.textContent = saved.isSubmitted ? "Profile Ready" : "Draft Saved";
           badge.classList.toggle("is-draft", !saved.isSubmitted);
 
-          const count = Array.isArray(saved.selectedSkills) ? saved.selectedSkills.length : 0;
-          text.textContent = `${saved.name || "User"} · ${count} skill${count === 1 ? "" : "s"}`;
+          const count = Array.isArray(saved.selectedSkills)
+            ? saved.selectedSkills.length
+            : 0;
+          text.textContent = `${saved.name || "User"} · ${count} skill${
+            count === 1 ? "" : "s"
+          }`;
 
-          document.getElementById("navStartBtn").textContent = saved.isSubmitted ? "View Profile" : "Resume Draft";
+          document.getElementById("navStartBtn").textContent = saved.isSubmitted
+            ? "View Profile"
+            : "Resume Draft";
           document.getElementById("heroStartBtn").textContent = saved.isSubmitted
             ? "Open Saved Profile →"
             : "Resume Setup →";
@@ -318,6 +483,7 @@
         }
       }
 
+      renderHeroDemo("developer", false);
       checkSavedProfile();
     </script>
   </body>
