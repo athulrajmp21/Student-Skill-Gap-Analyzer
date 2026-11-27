@@ -10,7 +10,24 @@
   <body>
     <main class="main-container create-account-container">
       <!-- Dynamic Progress Header -->
-      <div class="step-indicator" id="stepIndicator" aria-label="Form progress"></div>
+      <div style="margin-bottom: 12px; position: fixed; top: 20px; left: 20px">
+        <a
+          href="index.html"
+          style="
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--color-primary);
+            text-decoration: none;
+          "
+        >
+          ← Back to Home
+        </a>
+      </div>
+      <div
+        class="step-indicator"
+        id="stepIndicator"
+        aria-label="Form progress"
+      ></div>
 
       <form class="account-form" id="accountForm" novalidate>
         <!-- STEP 1: Profile Details -->
@@ -54,7 +71,9 @@
             </div>
           </div>
 
-          <button type="button" class="btn-primary" id="profileNextBtn">Next</button>
+          <button type="button" class="btn-primary" id="profileNextBtn">
+            Next
+          </button>
         </section>
 
         <!-- CONDITIONAL STEP (Only for "Others"): Define Role Required Skills -->
@@ -62,7 +81,8 @@
           <div class="form-box">
             <h1>Role Requirements</h1>
             <p class="step-subtitle">
-              Define the core skills required for <strong id="customRoleLabel">this role</strong>.
+              Define the core skills required for
+              <strong id="customRoleLabel">this role</strong>.
             </p>
 
             <div class="form-group">
@@ -82,7 +102,10 @@
 
             <div class="skill-section">
               <span class="skill-section-label">Common Role Skills</span>
-              <div class="skill-box suggestions-box" id="reqSuggestionsBox"></div>
+              <div
+                class="skill-box suggestions-box"
+                id="reqSuggestionsBox"
+              ></div>
             </div>
 
             <div class="form-group" id="customReqGroup">
@@ -97,8 +120,12 @@
           </div>
 
           <div class="button-row">
-            <button type="button" class="btn-secondary" data-nav="prev">Back</button>
-            <button type="button" class="btn-primary" id="customReqNextBtn">Next</button>
+            <button type="button" class="btn-secondary" data-nav="prev">
+              Back
+            </button>
+            <button type="button" class="btn-primary" id="customReqNextBtn">
+              Next
+            </button>
           </div>
         </section>
 
@@ -165,8 +192,12 @@
           </div>
 
           <div class="button-row">
-            <button type="button" class="btn-secondary" data-nav="prev">Back</button>
-            <button type="button" class="btn-primary" id="skillsNextBtn">Next</button>
+            <button type="button" class="btn-secondary" data-nav="prev">
+              Back
+            </button>
+            <button type="button" class="btn-primary" id="skillsNextBtn">
+              Next
+            </button>
           </div>
         </section>
 
@@ -175,15 +206,22 @@
           <div class="form-box">
             <h1>Rate Your Skills</h1>
             <p class="step-subtitle">
-              Rate your proficiency from <strong>1</strong> (Beginner) to <strong>5</strong> (Expert).
+              Rate your proficiency from <strong>1</strong> (Beginner) to
+              <strong>5</strong> (Expert).
             </p>
 
             <div class="rating-list" id="ratingList"></div>
-            <span class="error-msg" id="ratingErrorMsg" aria-live="polite"></span>
+            <span
+              class="error-msg"
+              id="ratingErrorMsg"
+              aria-live="polite"
+            ></span>
           </div>
 
           <div class="button-row">
-            <button type="button" class="btn-secondary" data-nav="prev">Back</button>
+            <button type="button" class="btn-secondary" data-nav="prev">
+              Back
+            </button>
             <button type="submit" class="btn-primary">Create Account</button>
           </div>
         </section>
@@ -207,10 +245,14 @@
           <div class="summary-panel" id="summaryCoveragePanel">
             <div class="summary-panel-top">
               <span class="skill-section-label">Role Skill Coverage</span>
-              <span class="coverage-pill" id="coveragePill">0 / 0 Required</span>
+              <span class="coverage-pill" id="coveragePill"
+                >0 / 0 Required</span
+              >
             </div>
             <div class="missing-summary-wrap" id="summaryMissingWrap" hidden>
-              <span class="missing-summary-title">Missing Required Skills:</span>
+              <span class="missing-summary-title"
+                >Missing Required Skills:</span
+              >
               <div class="chip-wrap" id="summaryMissingChips"></div>
             </div>
           </div>
@@ -223,8 +265,12 @@
         </div>
 
         <div class="button-row">
-          <button type="button" class="btn-secondary" id="editSummaryBtn">Edit</button>
-          <button type="button" class="btn-primary" id="resetFormBtn">Start Over</button>
+          <button type="button" class="btn-secondary" id="editSummaryBtn">
+            Edit
+          </button>
+          <button type="button" class="btn-primary" id="resetFormBtn">
+            Start Over
+          </button>
         </div>
       </section>
     </main>

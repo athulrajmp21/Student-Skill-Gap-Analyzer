@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillGap — Benchmark &amp; Map Your Role Readiness</title>
+    <link rel="stylesheet" href="home.css" />
+  </head>
+
+  <body>
+    <!-- Top Sticky Navbar -->
+    <header class="navbar">
+      <div class="nav-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-name">SkillGap.</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#features">Features</a>
+          <a href="#workflow">How It Works</a>
+          <a href="#roles">Role Benchmarks</a>
+        </nav>
+
+        <div class="nav-cta">
+          <a href="onboarding.html" class="btn-nav-primary" id="navStartBtn">
+            Launch Tool
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero Section (GitHub-style Product Intro + Interactive UI Preview) -->
+      <section class="hero-section">
+        <div class="container hero-grid">
+          <div class="hero-content">
+            <div class="announcement-pill">
+              <span class="pulse-dot"></span>
+              <span>Client-Side · Zero Sign-Up</span>
+            </div>
+
+            <h1>Know exactly where your skills stand before you apply.</h1>
+
+            <p class="hero-subtitle">
+              Benchmark your technical and product stack against standard industry
+              roles or define custom role requirements. Identify missing core
+              competencies, rate your proficiency, and export a structured skill
+              profile in under two minutes.
+            </p>
+
+            <div class="hero-actions">
+              <a href="onboarding.html" class="btn-hero-primary" id="heroStartBtn">
+                Start Skill Assessment →
+              </a>
+              <a href="#workflow" class="btn-hero-secondary">
+                Explore Workflow
+              </a>
+            </div>
+
+            <!-- Saved Profile Quick-Resume Bar (Appears only if localStorage has data) -->
+            <div class="saved-session-bar" id="savedSessionBar" hidden>
+              <div class="session-info">
+                <span class="session-badge" id="sessionStatusBadge">Saved Profile</span>
+                <span class="session-text" id="sessionSummaryText"></span>
+              </div>
+              <a href="onboarding.html" class="session-link">Open →</a>
+            </div>
+          </div>
+
+          <!-- Product UI Showcase Mockup -->
+          <div class="hero-showcase" aria-hidden="true">
+            <div class="window-frame">
+              <div class="window-topbar">
+                <div class="window-dots">
+                  <span></span><span></span><span></span>
+                </div>
+                <span class="window-title">skillgap-analyzer — readiness-report.json</span>
+              </div>
+
+              <div class="window-body">
+                <div class="mock-header">
+                  <div>
+                    <span class="mock-tag">Target Role</span>
+                    <h3>Full-Stack Developer</h3>
+                  </div>
+                  <span class="mock-score-badge">2 / 3 Required</span>
+                </div>
+
+                <div class="mock-alert">
+                  <strong>Missing Core Skill:</strong> Git
+                </div>
+
+                <div class="mock-skill-rows">
+                  <div class="mock-skill-row">
+                    <div class="mock-skill-meta">
+                      <span>JavaScript <em class="mock-req">Required</em></span>
+                      <span>4 / 5 · Advanced</span>
+                    </div>
+                    <div class="mock-bar"><div style="width: 80%"></div></div>
+                  </div>
+
+                  <div class="mock-skill-row">
+                    <div class="mock-skill-meta">
+                      <span>HTML &amp; CSS <em class="mock-req">Required</em></span>
+                      <span>5 / 5 · Expert</span>
+                    </div>
+                    <div class="mock-bar"><div style="width: 100%"></div></div>
+                  </div>
+
+                  <div class="mock-skill-row">
+                    <div class="mock-skill-meta">
+                      <span>React</span>
+                      <span>3 / 5 · Intermediate</span>
+                    </div>
+                    <div class="mock-bar"><div style="width: 60%"></div></div>
+                  </div>
+                </div>
+
+                <div class="mock-footer">
+                  <code>{ "coverage": "67%", "readyForExport": true }</code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Value Proposition / Bento Features Grid -->
+      <section class="section-block" id="features">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-kicker">Core Capabilities</span>
+            <h2>Built for structured self-assessment</h2>
+            <p>
+              Everything needed to audit your current capabilities against real
+              role expectations—without accounts, paywalls, or clutter.
+            </p>
+          </div>
+
+          <div class="bento-grid">
+            <article class="bento-card bento-wide">
+              <div class="card-icon">01</div>
+              <h3>Adaptive Standard &amp; Custom Role Flows</h3>
+              <p>
+                Pick a built-in role like <strong>Developer</strong>,
+                <strong>Designer</strong>, or <strong>Manager</strong> to load
+                curated core requirements automatically—or choose
+                <strong>Others</strong> to unlock a dedicated step where you
+                define the exact required skills for any niche role.
+              </p>
+            </article>
+
+            <article class="bento-card">
+              <div class="card-icon">02</div>
+              <h3>Instant Gap Detection</h3>
+              <p>
+                Missing required skills are highlighted in real time with a
+                one-click <strong>Add All Missing</strong> action so no
+                prerequisite slips through.
+              </p>
+            </article>
+
+            <article class="bento-card">
+              <div class="card-icon">03</div>
+              <h3>1–5 Proficiency Calibration</h3>
+              <p>
+                Rate each selected skill from <strong>Beginner (1)</strong> to
+                <strong>Expert (5)</strong> with clear level labels on a
+                focused evaluation screen.
+              </p>
+            </article>
+
+            <article class="bento-card bento-wide">
+              <div class="card-icon">04</div>
+              <h3>Local Persistence &amp; One-Click JSON Export</h3>
+              <p>
+                Your progress stays saved automatically in your browser's
+                <code>localStorage</code> across refreshes. On completion, copy
+                your structured JSON readiness report straight to your clipboard.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step-by-Step Workflow -->
+      <section class="section-block alt-surface" id="workflow">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-kicker">Workflow</span>
+            <h2>From role selection to readiness report</h2>
+          </div>
+
+          <div class="timeline-grid">
+            <div class="timeline-step">
+              <span class="step-pill">Step 1</span>
+              <h3>Set Identity &amp; Role</h3>
+              <p>Enter your name and choose a preset track or custom job title.</p>
+            </div>
+
+            <div class="timeline-step">
+              <span class="step-pill">Step 2 (Optional)</span>
+              <h3>Define Custom Benchmarks</h3>
+              <p>If using a custom role, specify which skills are mandatory.</p>
+            </div>
+
+            <div class="timeline-step">
+              <span class="step-pill">Step 3</span>
+              <h3>Curate Your Stack</h3>
+              <p>Search suggestions, add custom skills, and resolve missing prerequisites.</p>
+            </div>
+
+            <div class="timeline-step">
+              <span class="step-pill">Step 4</span>
+              <h3>Rate &amp; Export</h3>
+              <p>Score your proficiency 1–5, review coverage, and copy your JSON summary.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Preset Role Benchmarks Preview -->
+      <section class="section-block" id="roles">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-kicker">Built-In Templates</span>
+            <h2>Pre-configured role baselines</h2>
+          </div>
+
+          <div class="roles-grid">
+            <div class="role-card">
+              <h3>Developer</h3>
+              <p>Core engineering fundamentals and version control.</p>
+              <div class="pill-group">
+                <span>JavaScript</span>
+                <span>HTML &amp; CSS</span>
+                <span>Git</span>
+              </div>
+            </div>
+
+            <div class="role-card">
+              <h3>Designer</h3>
+              <p>Interface design, prototyping, and structural wireframing.</p>
+              <div class="pill-group">
+                <span>Figma</span>
+                <span>UI/UX Design</span>
+                <span>Wireframing</span>
+              </div>
+            </div>
+
+            <div class="role-card">
+              <h3>Manager</h3>
+              <p>Delivery execution, agile workflows, and team alignment.</p>
+              <div class="pill-group">
+                <span>Project Management</span>
+                <span>Agile</span>
+                <span>Communication</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom Call-To-Action Banner -->
+      <section class="cta-section">
+        <div class="container">
+          <div class="cta-banner">
+            <h2>Ready to map your skill gaps?</h2>
+            <p>Takes less than two minutes. Runs 100% locally in your browser.</p>
+            <a href="onboarding.html" class="btn-cta-light" id="bottomStartBtn">
+              Open Skill Gap Analyzer →
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span><strong>SkillGap</strong> — Role Readiness &amp; Skill Mapping Tool</span>
+        <span>Local-First · HTML / CSS / Vanilla JS</span>
+      </div>
+    </footer>
+
+    <script>
+      const STORAGE_KEY = "account_onboarding_state_v1";
+
+      function checkSavedProfile() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const saved = JSON.parse(raw);
+
+          if (!saved.name && !saved.role && (!saved.selectedSkills || saved.selectedSkills.length === 0)) {
+            return;
+          }
+
+          const bar = document.getElementById("savedSessionBar");
+          const badge = document.getElementById("sessionStatusBadge");
+          const text = document.getElementById("sessionSummaryText");
+
+          bar.hidden = false;
+          badge.textContent = saved.isSubmitted ? "Profile Ready" : "Draft Saved";
+          badge.classList.toggle("is-draft", !saved.isSubmitted);
+
+          const count = Array.isArray(saved.selectedSkills) ? saved.selectedSkills.length : 0;
+          text.textContent = `${saved.name || "User"} · ${count} skill${count === 1 ? "" : "s"}`;
+
+          document.getElementById("navStartBtn").textContent = saved.isSubmitted ? "View Profile" : "Resume Draft";
+          document.getElementById("heroStartBtn").textContent = saved.isSubmitted
+            ? "Open Saved Profile →"
+            : "Resume Setup →";
+          document.getElementById("bottomStartBtn").textContent = saved.isSubmitted
+            ? "Edit Your Profile →"
+            : "Continue Setup →";
+        } catch {
+          // Ignore malformed storage
+        }
+      }
+
+      checkSavedProfile();
+    </script>
+  </body>
+</html>
