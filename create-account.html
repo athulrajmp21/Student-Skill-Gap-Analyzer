@@ -9,16 +9,12 @@
 
   <body>
     <main class="main-container create-account-container">
-      <!-- Progress Header -->
-      <div class="step-indicator" aria-label="Form progress">
-        <div class="step-dot active" data-step="1">1</div>
-        <div class="step-line"></div>
-        <div class="step-dot" data-step="2">2</div>
-      </div>
+      <!-- Dynamic Progress Header -->
+      <div class="step-indicator" id="stepIndicator" aria-label="Form progress"></div>
 
       <form class="account-form" id="accountForm" novalidate>
         <!-- STEP 1: Profile Details -->
-        <section class="form-step active" id="step1">
+        <section class="form-step" id="stepProfile">
           <div class="form-box">
             <h1>Create Account</h1>
 
@@ -47,28 +43,96 @@
             </div>
 
             <div class="form-group other-group">
-              <label for="other">Other</label>
+              <label for="other">Other Role Title</label>
               <input
                 type="text"
                 id="other"
                 name="other_role"
-                placeholder="Please specify"
+                placeholder="e.g., Data Analyst, DevOps Engineer"
               />
               <span class="error-msg" aria-live="polite"></span>
             </div>
           </div>
 
-          <button type="button" class="btn-primary" id="nextBtn">Next</button>
+          <button type="button" class="btn-primary" id="profileNextBtn">Next</button>
         </section>
 
-        <!-- STEP 2: Skills Selection -->
-        <section class="form-step" id="step2" hidden>
+        <!-- CONDITIONAL STEP (Only for "Others"): Define Role Required Skills -->
+        <section class="form-step" id="stepCustomReq" hidden>
+          <div class="form-box">
+            <h1>Role Requirements</h1>
+            <p class="step-subtitle">
+              Define the core skills required for <strong id="customRoleLabel">this role</strong>.
+            </p>
+
+            <div class="form-group">
+              <label for="reqSkillInput">Search or Add Required Skills</label>
+              <div class="skill-input-row">
+                <input
+                  type="text"
+                  id="reqSkillInput"
+                  placeholder="Type a required skill..."
+                  autocomplete="off"
+                />
+                <button type="button" class="btn-add-skill" id="addReqSkillBtn">
+                  Add
+                </button>
+              </div>
+            </div>
+
+            <div class="skill-section">
+              <span class="skill-section-label">Common Role Skills</span>
+              <div class="skill-box suggestions-box" id="reqSuggestionsBox"></div>
+            </div>
+
+            <div class="form-group" id="customReqGroup">
+              <span class="skill-section-label">Required for This Role</span>
+              <div class="skill-box selected-box" id="customReqBox">
+                <span class="empty-hint" id="emptyCustomReqHint">
+                  Add at least one skill required for this role.
+                </span>
+              </div>
+              <span class="error-msg" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" data-nav="prev">Back</button>
+            <button type="button" class="btn-primary" id="customReqNextBtn">Next</button>
+          </div>
+        </section>
+
+        <!-- YOUR SKILLS STEP (Step 2 for standard roles, Step 3 for "Others") -->
+        <section class="form-step" id="stepSkills" hidden>
           <div class="form-box">
             <h1>Your Skills</h1>
 
+            <!-- Required Skills Banner for the Selected Role -->
+            <div class="skill-section">
+              <div class="label-row">
+                <span class="skill-section-label">
+                  Required Skills (<span id="roleBadgeName">Role</span>)
+                </span>
+                <button
+                  type="button"
+                  class="btn-link-action"
+                  id="addMissingReqBtn"
+                  hidden
+                >
+                  + Add All Missing
+                </button>
+              </div>
+              <div class="skill-box required-box" id="roleRequiredBox"></div>
+            </div>
+
+            <!-- Missing Required Skills Callout -->
+            <div class="missing-banner" id="missingBanner" hidden>
+              <span id="missingBannerText"></span>
+            </div>
+
             <!-- Search / Custom Add Input -->
             <div class="form-group">
-              <label for="skillInput">Search or Add Skills</label>
+              <label for="skillInput">Add Your Skills</label>
               <div class="skill-input-row">
                 <input
                   type="text"
@@ -82,260 +146,89 @@
               </div>
             </div>
 
-            <!-- Skill Suggestions Box (Above Selected Skills) -->
+            <!-- Skill Suggestions Box -->
             <div class="skill-section">
               <span class="skill-section-label">Suggested Skills</span>
-              <div class="skill-box suggestions-box" id="suggestionsBox">
-                <!-- Populated by JS -->
-              </div>
+              <div class="skill-box suggestions-box" id="suggestionsBox"></div>
             </div>
 
             <!-- Selected / Mentioned Skills Box -->
             <div class="form-group" id="skillsGroup">
-              <span class="skill-section-label">Selected Skills</span>
+              <span class="skill-section-label">Your Selected Skills</span>
               <div class="skill-box selected-box" id="selectedSkillsBox">
                 <span class="empty-hint" id="emptySkillsHint">
-                  No skills added yet. Click a suggestion or add your own.
+                  Click a required/suggested skill or add your own.
                 </span>
               </div>
-              <input type="hidden" name="skills" id="skillsHiddenInput" />
               <span class="error-msg" aria-live="polite"></span>
             </div>
           </div>
 
           <div class="button-row">
-            <button type="button" class="btn-secondary" id="backBtn">Back</button>
+            <button type="button" class="btn-secondary" data-nav="prev">Back</button>
+            <button type="button" class="btn-primary" id="skillsNextBtn">Next</button>
+          </div>
+        </section>
+
+        <!-- RATING STEP: Rate Selected Skills -->
+        <section class="form-step" id="stepRating" hidden>
+          <div class="form-box">
+            <h1>Rate Your Skills</h1>
+            <p class="step-subtitle">
+              Rate your proficiency from <strong>1</strong> (Beginner) to <strong>5</strong> (Expert).
+            </p>
+
+            <div class="rating-list" id="ratingList"></div>
+            <span class="error-msg" id="ratingErrorMsg" aria-live="polite"></span>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" data-nav="prev">Back</button>
             <button type="submit" class="btn-primary">Create Account</button>
           </div>
         </section>
       </form>
+
+      <!-- FINAL SUMMARY CARD (Shown on Submit) -->
+      <section class="form-step" id="summaryCard" hidden>
+        <div class="form-box summary-box">
+          <div class="summary-header">
+            <div class="summary-top-bar">
+              <span class="summary-badge">Profile Saved</span>
+              <button type="button" class="btn-copy-json" id="copyJsonBtn">
+                Copy JSON
+              </button>
+            </div>
+            <h1 id="summaryName">User Name</h1>
+            <p class="summary-role" id="summaryRole">Role Title</p>
+          </div>
+
+          <!-- Role Match / Missing Required Skills Highlight -->
+          <div class="summary-panel" id="summaryCoveragePanel">
+            <div class="summary-panel-top">
+              <span class="skill-section-label">Role Skill Coverage</span>
+              <span class="coverage-pill" id="coveragePill">0 / 0 Required</span>
+            </div>
+            <div class="missing-summary-wrap" id="summaryMissingWrap" hidden>
+              <span class="missing-summary-title">Missing Required Skills:</span>
+              <div class="chip-wrap" id="summaryMissingChips"></div>
+            </div>
+          </div>
+
+          <!-- Rated Skills Breakdown -->
+          <div class="summary-panel">
+            <span class="skill-section-label">Rated Skills</span>
+            <div class="summary-skills-list" id="summarySkillsList"></div>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="btn-secondary" id="editSummaryBtn">Edit</button>
+          <button type="button" class="btn-primary" id="resetFormBtn">Start Over</button>
+        </div>
+      </section>
     </main>
 
-    <script>
-      const form = document.getElementById("accountForm");
-      const step1 = document.getElementById("step1");
-      const step2 = document.getElementById("step2");
-      const nextBtn = document.getElementById("nextBtn");
-      const backBtn = document.getElementById("backBtn");
-      const roleSelect = document.getElementById("role");
-      const otherInput = document.getElementById("other");
-      const dots = document.querySelectorAll(".step-dot");
-      const stepLine = document.querySelector(".step-line");
-
-      // Skill elements & state
-      const skillInput = document.getElementById("skillInput");
-      const addSkillBtn = document.getElementById("addSkillBtn");
-      const suggestionsBox = document.getElementById("suggestionsBox");
-      const selectedSkillsBox = document.getElementById("selectedSkillsBox");
-      const emptySkillsHint = document.getElementById("emptySkillsHint");
-      const skillsHiddenInput = document.getElementById("skillsHiddenInput");
-      const skillsGroup = document.getElementById("skillsGroup");
-
-      const suggestedPool = [
-        "JavaScript",
-        "HTML & CSS",
-        "React",
-        "Node.js",
-        "UI/UX Design",
-        "Figma",
-        "Python",
-        "Project Management",
-        "Agile",
-        "SQL",
-        "Git",
-        "Communication"
-      ];
-
-      let selectedSkills = [];
-
-      // --- Step 1 Logic ---
-      roleSelect.addEventListener("change", () => {
-        const isOther = roleSelect.value === "others";
-        otherInput.required = isOther;
-        if (!isOther) {
-          otherInput.value = "";
-          clearFieldError(otherInput);
-        }
-      });
-
-      function validateField(field) {
-        const group = field.closest(".form-group");
-        const errorSpan = group.querySelector(".error-msg");
-        const val = field.value.trim();
-
-        if (field.required && !val) {
-          group.classList.add("has-error");
-          errorSpan.textContent = "This field is required.";
-          return false;
-        }
-        clearFieldError(field);
-        return true;
-      }
-
-      function clearFieldError(field) {
-        const group = field.closest(".form-group");
-        group.classList.remove("has-error");
-        group.querySelector(".error-msg").textContent = "";
-      }
-
-      step1.querySelectorAll("input, select").forEach((field) => {
-        field.addEventListener("blur", () => validateField(field));
-        field.addEventListener("input", () => {
-          if (field.closest(".form-group").classList.contains("has-error")) {
-            validateField(field);
-          }
-        });
-      });
-
-      function validateStep1() {
-        let valid = true;
-        step1.querySelectorAll("input, select").forEach((field) => {
-          if (!validateField(field)) valid = false;
-        });
-        return valid;
-      }
-
-      function goToStep(targetStep) {
-        const isStep2 = targetStep === 2;
-        step1.hidden = isStep2;
-        step2.hidden = !isStep2;
-        dots[1].classList.toggle("active", isStep2);
-        stepLine.classList.toggle("active", isStep2);
-      }
-
-      nextBtn.addEventListener("click", () => {
-        if (validateStep1()) {
-          goToStep(2);
-          skillInput.focus();
-        }
-      });
-
-      backBtn.addEventListener("click", () => goToStep(1));
-
-      // --- Step 2 Skills Logic ---
-      function renderSuggestions(filterText = "") {
-        const query = filterText.trim().toLowerCase();
-        suggestionsBox.innerHTML = "";
-
-        const available = suggestedPool.filter(
-          (skill) =>
-            !selectedSkills.some((s) => s.toLowerCase() === skill.toLowerCase()) &&
-            skill.toLowerCase().includes(query)
-        );
-
-        if (available.length === 0) {
-          const msg = document.createElement("span");
-          msg.className = "empty-hint";
-          msg.textContent = query
-            ? `No preset match — press "Add" to include "${filterText.trim()}".`
-            : "All suggested skills added!";
-          suggestionsBox.appendChild(msg);
-          return;
-        }
-
-        available.forEach((skill) => {
-          const chip = document.createElement("button");
-          chip.type = "button";
-          chip.className = "skill-chip suggestion-chip";
-          chip.innerHTML = `<span>+</span> ${skill}`;
-          chip.addEventListener("click", () => addSkill(skill));
-          suggestionsBox.appendChild(chip);
-        });
-      }
-
-      function renderSelectedSkills() {
-        // Remove existing chips while keeping emptySkillsHint
-        selectedSkillsBox
-          .querySelectorAll(".selected-chip")
-          .forEach((el) => el.remove());
-
-        emptySkillsHint.hidden = selectedSkills.length > 0;
-        skillsHiddenInput.value = JSON.stringify(selectedSkills);
-
-        selectedSkills.forEach((skill) => {
-          const chip = document.createElement("span");
-          chip.className = "skill-chip selected-chip";
-          chip.textContent = skill;
-
-          const removeBtn = document.createElement("button");
-          removeBtn.type = "button";
-          removeBtn.className = "remove-skill";
-          removeBtn.setAttribute("aria-label", `Remove ${skill}`);
-          removeBtn.textContent = "×";
-          removeBtn.addEventListener("click", () => removeSkill(skill));
-
-          chip.appendChild(removeBtn);
-          selectedSkillsBox.appendChild(chip);
-        });
-      }
-
-      function addSkill(rawSkill) {
-        const clean = rawSkill.trim();
-        if (!clean) return;
-
-        // Prevent case-insensitive duplicates
-        const exists = selectedSkills.some(
-          (s) => s.toLowerCase() === clean.toLowerCase()
-        );
-        if (!exists) {
-          selectedSkills.push(clean);
-          skillsGroup.classList.remove("has-error");
-          skillsGroup.querySelector(".error-msg").textContent = "";
-        }
-
-        skillInput.value = "";
-        renderSelectedSkills();
-        renderSuggestions();
-        skillInput.focus();
-      }
-
-      function removeSkill(skillToRemove) {
-        selectedSkills = selectedSkills.filter((s) => s !== skillToRemove);
-        renderSelectedSkills();
-        renderSuggestions(skillInput.value);
-      }
-
-      skillInput.addEventListener("input", () => {
-        renderSuggestions(skillInput.value);
-      });
-
-      skillInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          addSkill(skillInput.value);
-        }
-      });
-
-      addSkillBtn.addEventListener("click", () => {
-        addSkill(skillInput.value);
-      });
-
-      // Initial render
-      renderSuggestions();
-
-      // Final Submit
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (selectedSkills.length === 0) {
-          skillsGroup.classList.add("has-error");
-          skillsGroup.querySelector(".error-msg").textContent =
-            "Please add at least one skill.";
-          skillInput.focus();
-          return;
-        }
-
-        const payload = {
-          name: document.getElementById("name").value.trim(),
-          role:
-            roleSelect.value === "others"
-              ? otherInput.value.trim()
-              : roleSelect.value,
-          skills: selectedSkills
-        };
-
-        console.log("Submitted payload:", payload);
-        alert(`Account created for ${payload.name} with ${payload.skills.length} skill(s)!`);
-      });
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>

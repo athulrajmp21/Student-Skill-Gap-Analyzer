@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
 
 :root {
   --color-primary: #561C24;
@@ -7,6 +7,9 @@
   --color-bg: #E8D8C4;
   --color-surface: #FAF6F0;
   --color-error: #A61C1C;
+  --color-warn-bg: #F6E5D4;
+  --color-warn-border: #B85D19;
+  --color-success: #245C36;
 }
 
 *,
@@ -30,21 +33,22 @@ body {
 
 .main-container {
   width: 100%;
-  max-width: 440px;
+  max-width: 460px;
 }
 
+/* Progress Indicator */
 /* Progress Indicator */
 .step-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   margin-bottom: 16px;
 }
 
 .step-dot {
   width: 30px;
   height: 30px;
+  margin-inline: 4px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -52,36 +56,99 @@ body {
   font-weight: 800;
   background-color: var(--color-accent);
   color: var(--color-primary);
-  transition: background-color 0.25s ease, color 0.25s ease;
+  overflow: hidden;
+  transition:
+    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-inline 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .step-dot.active {
   background-color: var(--color-primary);
   color: var(--color-surface);
+  transform: scale(1.08);
 }
 
+/* Collapsed state for Step 4 bubble */
+.step-dot.is-hidden {
+  width: 0;
+  height: 0;
+  margin-inline: 0;
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+}
+
+/* Connector Line */
 .step-line {
-  width: 48px;
+  position: relative;
+  width: 40px;
   height: 3px;
+  margin-inline: 4px;
   border-radius: 2px;
   background-color: var(--color-accent);
-  transition: background-color 0.25s ease;
+  overflow: hidden;
+  transition:
+    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-inline 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease;
 }
 
-.step-line.active {
+.step-line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   background-color: var(--color-primary);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Step Transition */
-@keyframes stepEnter {
+.step-line.active::after {
+  transform: scaleX(1);
+}
+
+/* Collapsed state for Step 4 connector line */
+.step-line.is-hidden {
+  width: 0;
+  margin-inline: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Directional Step Animations */
+@keyframes slideForward {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateX(28px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
+}
+
+@keyframes slideBackward {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.form-step.slide-next:not([hidden]) {
+  animation: slideForward 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.form-step.slide-prev:not([hidden]) {
+  animation: slideBackward 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes chipPop {
@@ -103,18 +170,24 @@ body {
 .form-box {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 32px;
+  gap: 14px;
+  padding: 28px;
   border-radius: 12px;
   background-color: var(--color-accent);
   box-shadow: 0 8px 24px rgba(86, 28, 36, 0.08);
 }
 
 .form-box h1 {
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 800;
   text-align: center;
-  margin-bottom: 4px;
+}
+
+.step-subtitle {
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: -6px;
+  color: rgba(86, 28, 36, 0.85);
 }
 
 .form-group {
@@ -123,10 +196,32 @@ body {
   gap: 6px;
 }
 
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
 .form-group label,
 .skill-section-label {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 700;
+}
+
+.btn-link-action {
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.btn-link-action:hover {
+  color: var(--color-secondary);
 }
 
 .form-group input,
@@ -166,7 +261,7 @@ body {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  margin-top: -16px;
+  margin-top: -14px;
   pointer-events: none;
   transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.35s ease;
 }
@@ -178,7 +273,7 @@ body {
   pointer-events: auto;
 }
 
-/* Skill Input & Boxes */
+/* Skill Input & Containers */
 .skill-input-row {
   display: flex;
   gap: 8px;
@@ -216,58 +311,78 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  padding: 12px;
+  gap: 7px;
+  padding: 11px;
   border-radius: 8px;
   background-color: var(--color-surface);
   border: 2px solid transparent;
 }
 
-.suggestions-box {
-  max-height: 112px;
-  overflow-y: auto;
-  background-color: rgba(250, 246, 240, 0.65);
-  border: 1px dashed rgba(86, 28, 36, 0.3);
+/* Required Role Skills Box & Missing Highlight */
+.required-box {
+  background-color: rgba(86, 28, 36, 0.08);
+  border: 1.5px solid rgba(86, 28, 36, 0.25);
 }
 
-.suggestions-box {
-  max-height: 112px;
-  overflow-y: auto;
-  background-color: rgba(250, 246, 240, 0.65);
-  border: 1px dashed rgba(86, 28, 36, 0.3);
+.missing-banner {
+  padding: 9px 12px;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #6B3208;
+  background-color: var(--color-warn-bg);
+  border-left: 3.5px solid var(--color-warn-border);
+}
 
-  /* Firefox */
+/* Custom Scrollbar */
+.suggestions-box,
+.rating-list,
+.summary-skills-list {
   scrollbar-width: thin;
   scrollbar-color: rgba(86, 28, 36, 0.35) transparent;
 }
 
-/* Chrome, Edge, Safari */
-.suggestions-box::-webkit-scrollbar {
+.suggestions-box::-webkit-scrollbar,
+.rating-list::-webkit-scrollbar,
+.summary-skills-list::-webkit-scrollbar {
   width: 6px;
 }
 
-.suggestions-box::-webkit-scrollbar-track {
+.suggestions-box::-webkit-scrollbar-track,
+.rating-list::-webkit-scrollbar-track,
+.summary-skills-list::-webkit-scrollbar-track {
   background: transparent;
-  margin-block: 6px; /* keeps the thumb away from the rounded corners */
+  margin-block: 6px;
 }
 
-.suggestions-box::-webkit-scrollbar-thumb {
+.suggestions-box::-webkit-scrollbar-thumb,
+.rating-list::-webkit-scrollbar-thumb,
+.summary-skills-list::-webkit-scrollbar-thumb {
   background-color: rgba(86, 28, 36, 0.3);
   border-radius: 999px;
 }
 
-.suggestions-box::-webkit-scrollbar-thumb:hover {
+.suggestions-box::-webkit-scrollbar-thumb:hover,
+.rating-list::-webkit-scrollbar-thumb:hover,
+.summary-skills-list::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-primary);
 }
 
+.suggestions-box {
+  max-height: 100px;
+  overflow-y: auto;
+  background-color: rgba(250, 246, 240, 0.65);
+  border: 1px dashed rgba(86, 28, 36, 0.3);
+}
+
 .selected-box {
-  min-height: 76px;
+  min-height: 68px;
   align-content: flex-start;
 }
 
 .empty-hint {
-  font-size: 0.82rem;
-  color: rgba(86, 28, 36, 0.6);
+  font-size: 0.8rem;
+  color: rgba(86, 28, 36, 0.65);
   font-weight: 500;
 }
 
@@ -275,13 +390,34 @@ body {
 .skill-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 11px;
+  gap: 5px;
+  padding: 5px 10px;
   border-radius: 999px;
   font-family: inherit;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
   animation: chipPop 0.2s ease-out;
+}
+
+.required-chip.is-missing {
+  border: 1.5px dashed var(--color-warn-border);
+  background-color: var(--color-warn-bg);
+  color: #6B3208;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.required-chip.is-missing:hover {
+  background-color: var(--color-warn-border);
+  border-style: solid;
+  color: var(--color-surface);
+}
+
+.required-chip.is-added {
+  background-color: rgba(36, 92, 54, 0.14);
+  border: 1.5px solid rgba(36, 92, 54, 0.35);
+  color: var(--color-success);
+  cursor: default;
 }
 
 .suggestion-chip {
@@ -311,12 +447,239 @@ body {
   line-height: 1;
   cursor: pointer;
   padding: 0 2px;
-  transition: color 0.15s ease, transform 0.15s ease;
 }
 
 .remove-skill:hover {
   color: #ffffff;
-  transform: scale(1.15);
+}
+
+/* Rating Step */
+.rating-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 290px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.rating-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: var(--color-surface);
+}
+
+.rating-row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.rating-skill-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.req-tag {
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: rgba(86, 28, 36, 0.12);
+  color: var(--color-primary);
+}
+
+.rating-level-text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+}
+
+.rating-buttons {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.rate-btn {
+  padding: 7px 0;
+  border: 1.5px solid rgba(86, 28, 36, 0.3);
+  border-radius: 6px;
+  background-color: transparent;
+  color: var(--color-primary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.rate-btn:hover {
+  border-color: var(--color-primary);
+}
+
+.rate-btn.filled {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-surface);
+}
+
+/* Final Summary Card */
+.summary-header {
+  text-align: center;
+  padding-bottom: 4px;
+}
+
+.summary-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.summary-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.btn-copy-json {
+  padding: 4px 11px;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 999px;
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-copy-json:hover {
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.btn-copy-json.is-copied {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+  color: var(--color-surface);
+}
+
+.summary-role {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin-top: 2px;
+}
+
+.summary-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: var(--color-surface);
+}
+
+.summary-panel-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.coverage-pill {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.coverage-pill.is-complete {
+  background-color: rgba(36, 92, 54, 0.15);
+  color: var(--color-success);
+}
+
+.coverage-pill.is-partial {
+  background-color: var(--color-warn-bg);
+  color: #6B3208;
+}
+
+.missing-summary-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(86, 28, 36, 0.2);
+}
+
+.missing-summary-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6B3208;
+}
+
+.chip-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.missing-pill {
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background-color: var(--color-warn-bg);
+  border: 1px dashed var(--color-warn-border);
+  color: #6B3208;
+}
+
+.summary-skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 170px;
+  overflow-y: auto;
+}
+
+.summary-skill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px;
+  border-radius: 6px;
+  background-color: rgba(199, 183, 163, 0.28);
+  font-size: 0.83rem;
+}
+
+.summary-skill-title {
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.summary-skill-score {
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--color-secondary);
 }
 
 /* Navigation Buttons */
