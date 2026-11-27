@@ -1,102 +1,122 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap');
 
-:root{
-    --color-primary: #561C24;
-    --color-secondary: #6D2932;
-    --color-accent: #C7B7A3;
-    --color-bg: #E8D8C4;
+:root {
+  --color-primary: #561C24;
+  --color-secondary: #6D2932;
+  --color-accent: #C7B7A3;
+  --color-bg: #E8D8C4;
+  --color-surface: #FAF6F0;
 }
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Montserrat";
-    transition: 0.2s ease-in-out;
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--color-bg);
-    color: var(--color-primary);
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: "Montserrat", sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-primary);
 }
 
-.main-container{
-    min-width: 400px;
-    
+/* Layout */
+.main-container {
+  width: 100%;
+  max-width: 420px;
 }
 
-.form-box{
-    border-radius: 10px;
-    background-color: var(--color-accent);
-    padding: 30px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.form-box {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 32px;
+  border-radius: 12px;
+  background-color: var(--color-accent);
+  box-shadow: 0 8px 24px rgba(86, 28, 36, 0.08);
 }
 
-.form-box>h1{
-    font-size: 1.5rem;
-    text-align: center;
-    margin-bottom: 10px;
+.form-box h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 6px;
 }
 
-.form-box label{
-    font-weight: 500;
-    font-size: 1.05rem;
-    font-weight: 700;
+/* Form Controls */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.form-box input, .form-box select{
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 0.9rem;
+.form-group label {
+  font-size: 0.95rem;
+  font-weight: 700;
 }
 
-
-.form-group{
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+.form-group input,
+.form-group select {
+  padding: 11px 12px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--color-primary);
+  background-color: var(--color-surface);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* Conditional "Others" Reveal */
 .other-group {
-    display: flex;
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    margin-top: -20px; /* offsets the .form-box gap: 20px when hidden */
-    pointer-events: none;
-    transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.35s ease;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin-top: -18px; /* Offsets parent gap when collapsed */
+  pointer-events: none;
+  transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.35s ease;
 }
 
 .form-group:has(option[value="others"]:checked) ~ .other-group {
-    max-height: 100px; /* set slightly higher than the input's actual height */
-    opacity: 1;
-    margin-top: 0;
-    pointer-events: auto;
+  max-height: 90px;
+  opacity: 1;
+  margin-top: 0;
+  pointer-events: auto;
 }
 
-.main-container>form>button{
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 10px;
-    border: none;
-    background-color: var(--color-primary);
-    color: var(--color-accent);
-    font-weight: 800;
-    font-size: 1rem;
+/* Submit Button */
+.btn-next {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  background-color: var(--color-primary);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
-.skill-select-container{
- display: none;
-    
+.btn-next:hover {
+  background-color: var(--color-secondary);
+}
+
+.btn-next:active {
+  transform: scale(0.99);
 }

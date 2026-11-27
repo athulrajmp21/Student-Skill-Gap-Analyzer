@@ -3,48 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Create Account</title>
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <div class="main-container create-account-container">
-      <form>
+    <main class="main-container create-account-container">
+      <form class="account-form">
         <div class="form-box">
           <h1>Create Account</h1>
+
           <div class="form-group">
             <label for="name">Name</label>
             <input
               type="text"
               id="name"
+              name="name"
               placeholder="Enter your name"
               required
             />
           </div>
+
           <div class="form-group">
             <label for="role">Job Role</label>
-            <select id="role" required>
+            <select id="role" name="role" required>
+              <option value="" disabled selected>Select a role</option>
               <option value="developer">Developer</option>
               <option value="designer">Designer</option>
               <option value="manager">Manager</option>
               <option value="others">Others</option>
             </select>
           </div>
+
           <div class="form-group other-group">
             <label for="other">Other</label>
             <input
               type="text"
               id="other"
+              name="other_role"
               placeholder="Please specify"
-              required
             />
           </div>
         </div>
+
         <button type="submit" class="btn-next">Next</button>
       </form>
-    </div>
-    <div class="main-container skill-select-container">
+    </main>
 
-    </div>
+    <script src="script.js"></script>
   </body>
 </html>
