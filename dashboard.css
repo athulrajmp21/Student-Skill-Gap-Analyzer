@@ -865,10 +865,13 @@ body {
 /* Responsive */
 @media (max-width: 960px) {
   .app-layout {
-    grid-template-columns: 1fr;
+    padding-left: 0;
   }
 
   .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
     border-right: none;
     border-bottom: 1px solid rgba(86, 28, 36, 0.14);
   }
