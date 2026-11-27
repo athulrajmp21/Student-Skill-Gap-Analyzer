@@ -42,14 +42,18 @@
             <h1>Know exactly where your skills stand before you apply.</h1>
 
             <p class="hero-subtitle">
-              Benchmark your technical and product stack against standard industry
-              roles or define custom role requirements. Identify missing core
-              competencies, rate your proficiency, and export a structured skill
-              profile in under two minutes.
+              Benchmark your technical and product stack against standard
+              industry roles or define custom role requirements. Identify
+              missing core competencies, rate your proficiency, and export a
+              structured skill profile in under two minutes.
             </p>
 
             <div class="hero-actions">
-              <a href="onboarding.html" class="btn-hero-primary" id="heroStartBtn">
+              <a
+                href="onboarding.html"
+                class="btn-hero-primary"
+                id="heroStartBtn"
+              >
                 Start Skill Assessment →
               </a>
               <a href="#workflow" class="btn-hero-secondary">
@@ -60,7 +64,9 @@
             <!-- Saved Profile Quick-Resume Bar (Appears only if localStorage has data) -->
             <div class="saved-session-bar" id="savedSessionBar" hidden>
               <div class="session-info">
-                <span class="session-badge" id="sessionStatusBadge">Saved Profile</span>
+                <span class="session-badge" id="sessionStatusBadge"
+                  >Saved Profile</span
+                >
                 <span class="session-text" id="sessionSummaryText"></span>
               </div>
               <a href="onboarding.html" class="session-link">Open →</a>
@@ -74,11 +80,17 @@
                 <div class="window-dots">
                   <span></span><span></span><span></span>
                 </div>
-                <span class="window-title">interactive-demo — readiness-report.json</span>
+                <span class="window-title"
+                  >interactive-demo — readiness-report.json</span
+                >
               </div>
 
               <!-- Interactive Role Switcher Tabs -->
-              <div class="demo-tabs" role="tablist" aria-label="Preview role benchmarks">
+              <div
+                class="demo-tabs"
+                role="tablist"
+                aria-label="Preview role benchmarks"
+              >
                 <button
                   type="button"
                   class="demo-tab active"
@@ -114,12 +126,16 @@
                     <span class="mock-tag">Live Preview</span>
                     <h3 id="demoRoleTitle">Developer</h3>
                   </div>
-                  <span class="mock-score-badge" id="demoCoverageBadge">2 / 3 Required</span>
+                  <span class="mock-score-badge" id="demoCoverageBadge"
+                    >2 / 3 Required</span
+                  >
                 </div>
 
                 <!-- Interactive Missing Skill Banner -->
                 <div class="mock-alert" id="demoMissingAlert">
-                  <span id="demoMissingText"><strong>Missing Core Skill:</strong> Git</span>
+                  <span id="demoMissingText"
+                    ><strong>Missing Core Skill:</strong> Git</span
+                  >
                   <button type="button" class="mock-fix-btn" id="demoFixBtn">
                     + Add Skill
                   </button>
@@ -129,7 +145,10 @@
                 <div class="mock-skill-rows" id="demoSkillRows"></div>
 
                 <div class="mock-footer">
-                  <code id="demoJsonFooter">{ "role": "developer", "coverage": "67%", "readyForExport": true }</code>
+                  <code id="demoJsonFooter"
+                    >{ "role": "developer", "coverage": "67%", "readyForExport":
+                    true }</code
+                  >
                 </div>
               </div>
             </div>
@@ -177,8 +196,8 @@
               <h3>1–5 Proficiency Calibration</h3>
               <p>
                 Rate each selected skill from <strong>Beginner (1)</strong> to
-                <strong>Expert (5)</strong> with clear level labels on a
-                focused evaluation screen.
+                <strong>Expert (5)</strong> with clear level labels on a focused
+                evaluation screen.
               </p>
             </article>
 
@@ -188,7 +207,8 @@
               <p>
                 Your progress stays saved automatically in your browser's
                 <code>localStorage</code> across refreshes. On completion, copy
-                your structured JSON readiness report straight to your clipboard.
+                your structured JSON readiness report straight to your
+                clipboard.
               </p>
             </article>
           </div>
@@ -207,7 +227,9 @@
             <div class="timeline-step">
               <span class="step-pill">Step 1</span>
               <h3>Set Identity &amp; Role</h3>
-              <p>Enter your name and choose a preset track or custom job title.</p>
+              <p>
+                Enter your name and choose a preset track or custom job title.
+              </p>
             </div>
 
             <div class="timeline-step">
@@ -219,13 +241,19 @@
             <div class="timeline-step">
               <span class="step-pill">Step 3</span>
               <h3>Curate Your Stack</h3>
-              <p>Search suggestions, add custom skills, and resolve missing prerequisites.</p>
+              <p>
+                Search suggestions, add custom skills, and resolve missing
+                prerequisites.
+              </p>
             </div>
 
             <div class="timeline-step">
               <span class="step-pill">Step 4</span>
               <h3>Rate &amp; Export</h3>
-              <p>Score your proficiency 1–5, review coverage, and copy your JSON summary.</p>
+              <p>
+                Score your proficiency 1–5, review coverage, and copy your JSON
+                summary.
+              </p>
             </div>
           </div>
         </div>
@@ -289,7 +317,10 @@
 
     <footer class="site-footer">
       <div class="container footer-inner">
-        <span><strong>SkillGap</strong> — Role Readiness &amp; Skill Mapping Tool</span>
+        <span
+          ><strong>SkillGap</strong> — Role Readiness &amp; Skill Mapping
+          Tool</span
+        >
         <span>Local-First · HTML / CSS / Vanilla JS</span>
       </div>
     </footer>
@@ -302,7 +333,7 @@
         2: "Basic",
         3: "Intermediate",
         4: "Advanced",
-        5: "Expert"
+        5: "Expert",
       };
 
       // Interactive Hero Preview Data
@@ -315,8 +346,8 @@
           skills: [
             { name: "JavaScript", required: true, rating: 4 },
             { name: "HTML & CSS", required: true, rating: 5 },
-            { name: "React", required: false, rating: 3 }
-          ]
+            { name: "React", required: false, rating: 3 },
+          ],
         },
         designer: {
           title: "Designer",
@@ -326,8 +357,8 @@
           skills: [
             { name: "Figma", required: true, rating: 5 },
             { name: "UI/UX Design", required: true, rating: 4 },
-            { name: "Design Systems", required: false, rating: 3 }
-          ]
+            { name: "Design Systems", required: false, rating: 3 },
+          ],
         },
         manager: {
           title: "Manager",
@@ -337,9 +368,9 @@
           skills: [
             { name: "Project Management", required: true, rating: 4 },
             { name: "Agile", required: true, rating: 4 },
-            { name: "Roadmapping", required: false, rating: 3 }
-          ]
-        }
+            { name: "Roadmapping", required: false, rating: 3 },
+          ],
+        },
       };
 
       let activeDemoRole = "developer";
@@ -379,7 +410,7 @@
           currentSkills.splice(2, 0, {
             name: data.missingSkill.name,
             required: true,
-            rating: data.missingSkill.defaultRating
+            rating: data.missingSkill.defaultRating,
           });
         }
 
@@ -459,7 +490,9 @@
           const text = document.getElementById("sessionSummaryText");
 
           bar.hidden = false;
-          badge.textContent = saved.isSubmitted ? "Profile Ready" : "Draft Saved";
+          badge.textContent = saved.isSubmitted
+            ? "Profile Ready"
+            : "Draft Saved";
           badge.classList.toggle("is-draft", !saved.isSubmitted);
 
           const count = Array.isArray(saved.selectedSkills)
@@ -472,14 +505,24 @@
           document.getElementById("navStartBtn").textContent = saved.isSubmitted
             ? "View Profile"
             : "Resume Draft";
-          document.getElementById("heroStartBtn").textContent = saved.isSubmitted
-            ? "Open Saved Profile →"
-            : "Resume Setup →";
-          document.getElementById("bottomStartBtn").textContent = saved.isSubmitted
-            ? "Edit Your Profile →"
-            : "Continue Setup →";
+          document.getElementById("heroStartBtn").textContent =
+            saved.isSubmitted ? "Open Saved Profile →" : "Resume Setup →";
+          document.getElementById("bottomStartBtn").textContent =
+            saved.isSubmitted ? "Edit Your Profile →" : "Continue Setup →";
         } catch {
           // Ignore malformed storage
+        }
+
+        // Inside checkSavedProfile() in index.html:
+        if (saved.isSubmitted) {
+          document.getElementById("navStartBtn").href = "dashboard.html";
+          document.getElementById("navStartBtn").textContent = "Dashboard";
+
+          document.getElementById("heroStartBtn").href = "dashboard.html";
+          document.getElementById("heroStartBtn").textContent =
+            "Open Dashboard →";
+
+          document.querySelector(".session-link").href = "dashboard.html";
         }
       }
 

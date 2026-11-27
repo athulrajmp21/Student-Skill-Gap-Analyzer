@@ -256,80 +256,7 @@ function applyStepAnimation(element, direction) {
   if (direction === "prev") element.classList.add("slide-prev");
 }
 
-function goToStepIndex(newIndex, persist = true, direction = null) {
-  // Auto-detect direction if not explicitly passed
-  const resolvedDirection =
-    direction ||
-    (newIndex > currentStepIndex
-      ? "next"
-      : newIndex < currentStepIndex
-        ? "prev"
-        : "next");
 
-  currentStepIndex = newIndex;
-  isSubmitted = false;
-  summaryCard.hidden = true;
-  form.hidden = false;
-
-  const targetId = activeFlow[currentStepIndex];
-  document.querySelectorAll("#accountForm .form-step").forEach((sec) => {
-    const isTarget = sec.id === targetId;
-    sec.hidden = !isTarget;
-    if (isTarget) {
-      applyStepAnimation(sec, resolvedDirection);
-    }
-  });
-
-  renderStepper();
-
-  if (targetId === "stepCustomReq") {
-    document.getElementById("customRoleLabel").textContent =
-      otherInput.value.trim() || "your custom role";
-    renderCustomReqSuggestions();
-    renderCustomReqSelected();
-    reqSkillInput.focus();
-  } else if (targetId === "stepSkills") {
-    renderRoleRequiredSkills();
-    renderSkillSuggestions();
-    renderSelectedSkills();
-    skillInput.focus();
-  } else if (targetId === "stepRating") {
-    renderRatingStep();
-  }
-
-  if (persist) saveState();
-}
-
-function goToStepIndex(newIndex, persist = true) {
-  currentStepIndex = newIndex;
-  isSubmitted = false;
-  summaryCard.hidden = true;
-  form.hidden = false;
-
-  const targetId = activeFlow[currentStepIndex];
-  document.querySelectorAll("#accountForm .form-step").forEach((sec) => {
-    sec.hidden = sec.id !== targetId;
-  });
-
-  renderStepper();
-
-  if (targetId === "stepCustomReq") {
-    document.getElementById("customRoleLabel").textContent =
-      otherInput.value.trim() || "your custom role";
-    renderCustomReqSuggestions();
-    renderCustomReqSelected();
-    reqSkillInput.focus();
-  } else if (targetId === "stepSkills") {
-    renderRoleRequiredSkills();
-    renderSkillSuggestions();
-    renderSelectedSkills();
-    skillInput.focus();
-  } else if (targetId === "stepRating") {
-    renderRatingStep();
-  }
-
-  if (persist) saveState();
-}
 
 document.querySelectorAll('[data-nav="prev"]').forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -799,6 +726,89 @@ copyJsonBtn.addEventListener("click", async () => {
   }, 2000);
 });
 
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const saved = JSON.parse(raw);
+
+    nameInput.value = saved.name || "";
+    roleSelect.value = saved.role || "";
+    otherInput.value = saved.otherRole || "";
+    otherInput.required = roleSelect.value === "others";
+
+    customRequiredSkills = Array.isArray(saved.customRequiredSkills)
+      ? saved.customRequiredSkills
+      : [];
+    selectedSkills = Array.isArray(saved.selectedSkills)
+      ? saved.selectedSkills
+      : [];
+    skillRatings =
+      saved.skillRatings && typeof saved.skillRatings === "object"
+        ? saved.skillRatings
+        : {};
+
+    updateFlowForRole(false);
+
+    // If returning from dashboard to edit, open on Step 1 (or saved step)
+    const maxIndex = activeFlow.length - 1;
+    currentStepIndex = saved.isSubmitted
+      ? 0
+      : Math.min(Math.max(0, saved.currentStepIndex || 0), maxIndex);
+    isSubmitted = Boolean(saved.isSubmitted);
+
+    goToStepIndex(currentStepIndex, false);
+    return true;
+  } catch (err) {
+    console.warn("Could not restore state from localStorage:", err);
+    return false;
+  }
+}
+
+// Keep ONLY this single goToStepIndex function (remove the second duplicate one)
+function goToStepIndex(newIndex, persist = true, direction = null) {
+  const resolvedDirection =
+    direction ||
+    (newIndex > currentStepIndex
+      ? "next"
+      : newIndex < currentStepIndex
+        ? "prev"
+        : "next");
+
+  currentStepIndex = newIndex;
+  summaryCard.hidden = true;
+  form.hidden = false;
+
+  const targetId = activeFlow[currentStepIndex];
+  document.querySelectorAll("#accountForm .form-step").forEach((sec) => {
+    const isTarget = sec.id === targetId;
+    sec.hidden = !isTarget;
+    if (isTarget) {
+      applyStepAnimation(sec, resolvedDirection);
+    }
+  });
+
+  renderStepper();
+
+  if (targetId === "stepCustomReq") {
+    document.getElementById("customRoleLabel").textContent =
+      otherInput.value.trim() || "your custom role";
+    renderCustomReqSuggestions();
+    renderCustomReqSelected();
+    reqSkillInput.focus();
+  } else if (targetId === "stepSkills") {
+    renderRoleRequiredSkills();
+    renderSkillSuggestions();
+    renderSelectedSkills();
+    skillInput.focus();
+  } else if (targetId === "stepRating") {
+    renderRatingStep();
+  }
+
+  if (persist) saveState();
+}
+
+// Redirect to dashboard.html on final submit
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const unrated = selectedSkills.filter((s) => !skillRatings[s]);
@@ -806,7 +816,15 @@ form.addEventListener("submit", (e) => {
     ratingErrorMsg.textContent = `Please rate all skills (${unrated.length} remaining).`;
     return;
   }
-  renderSummaryCard(true);
+
+  isSubmitted = true;
+  renderStepper(true);
+  saveState();
+
+  // Navigate to the dashboard after a brief moment so the final checkmark animates
+  setTimeout(() => {
+    window.location.href = "dashboard.html";
+  }, 250);
 });
 
 document.getElementById("editSummaryBtn").addEventListener("click", () => {
