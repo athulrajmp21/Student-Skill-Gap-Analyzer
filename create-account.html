@@ -9,47 +9,333 @@
 
   <body>
     <main class="main-container create-account-container">
-      <form class="account-form">
-        <div class="form-box">
-          <h1>Create Account</h1>
+      <!-- Progress Header -->
+      <div class="step-indicator" aria-label="Form progress">
+        <div class="step-dot active" data-step="1">1</div>
+        <div class="step-line"></div>
+        <div class="step-dot" data-step="2">2</div>
+      </div>
 
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Enter your name"
-              required
-            />
+      <form class="account-form" id="accountForm" novalidate>
+        <!-- STEP 1: Profile Details -->
+        <section class="form-step active" id="step1">
+          <div class="form-box">
+            <h1>Create Account</h1>
+
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your name"
+                required
+              />
+              <span class="error-msg" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="role">Job Role</label>
+              <select id="role" name="role" required>
+                <option value="" disabled selected>Select a role</option>
+                <option value="developer">Developer</option>
+                <option value="designer">Designer</option>
+                <option value="manager">Manager</option>
+                <option value="others">Others</option>
+              </select>
+              <span class="error-msg" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group other-group">
+              <label for="other">Other</label>
+              <input
+                type="text"
+                id="other"
+                name="other_role"
+                placeholder="Please specify"
+              />
+              <span class="error-msg" aria-live="polite"></span>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="role">Job Role</label>
-            <select id="role" name="role" required>
-              <option value="" disabled selected>Select a role</option>
-              <option value="developer">Developer</option>
-              <option value="designer">Designer</option>
-              <option value="manager">Manager</option>
-              <option value="others">Others</option>
-            </select>
+          <button type="button" class="btn-primary" id="nextBtn">Next</button>
+        </section>
+
+        <!-- STEP 2: Skills Selection -->
+        <section class="form-step" id="step2" hidden>
+          <div class="form-box">
+            <h1>Your Skills</h1>
+
+            <!-- Search / Custom Add Input -->
+            <div class="form-group">
+              <label for="skillInput">Search or Add Skills</label>
+              <div class="skill-input-row">
+                <input
+                  type="text"
+                  id="skillInput"
+                  placeholder="Type a skill (e.g., React, Figma)..."
+                  autocomplete="off"
+                />
+                <button type="button" class="btn-add-skill" id="addSkillBtn">
+                  Add
+                </button>
+              </div>
+            </div>
+
+            <!-- Skill Suggestions Box (Above Selected Skills) -->
+            <div class="skill-section">
+              <span class="skill-section-label">Suggested Skills</span>
+              <div class="skill-box suggestions-box" id="suggestionsBox">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Selected / Mentioned Skills Box -->
+            <div class="form-group" id="skillsGroup">
+              <span class="skill-section-label">Selected Skills</span>
+              <div class="skill-box selected-box" id="selectedSkillsBox">
+                <span class="empty-hint" id="emptySkillsHint">
+                  No skills added yet. Click a suggestion or add your own.
+                </span>
+              </div>
+              <input type="hidden" name="skills" id="skillsHiddenInput" />
+              <span class="error-msg" aria-live="polite"></span>
+            </div>
           </div>
 
-          <div class="form-group other-group">
-            <label for="other">Other</label>
-            <input
-              type="text"
-              id="other"
-              name="other_role"
-              placeholder="Please specify"
-            />
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="backBtn">Back</button>
+            <button type="submit" class="btn-primary">Create Account</button>
           </div>
-        </div>
-
-        <button type="submit" class="btn-next">Next</button>
+        </section>
       </form>
     </main>
 
-    <script src="script.js"></script>
+    <script>
+      const form = document.getElementById("accountForm");
+      const step1 = document.getElementById("step1");
+      const step2 = document.getElementById("step2");
+      const nextBtn = document.getElementById("nextBtn");
+      const backBtn = document.getElementById("backBtn");
+      const roleSelect = document.getElementById("role");
+      const otherInput = document.getElementById("other");
+      const dots = document.querySelectorAll(".step-dot");
+      const stepLine = document.querySelector(".step-line");
+
+      // Skill elements & state
+      const skillInput = document.getElementById("skillInput");
+      const addSkillBtn = document.getElementById("addSkillBtn");
+      const suggestionsBox = document.getElementById("suggestionsBox");
+      const selectedSkillsBox = document.getElementById("selectedSkillsBox");
+      const emptySkillsHint = document.getElementById("emptySkillsHint");
+      const skillsHiddenInput = document.getElementById("skillsHiddenInput");
+      const skillsGroup = document.getElementById("skillsGroup");
+
+      const suggestedPool = [
+        "JavaScript",
+        "HTML & CSS",
+        "React",
+        "Node.js",
+        "UI/UX Design",
+        "Figma",
+        "Python",
+        "Project Management",
+        "Agile",
+        "SQL",
+        "Git",
+        "Communication"
+      ];
+
+      let selectedSkills = [];
+
+      // --- Step 1 Logic ---
+      roleSelect.addEventListener("change", () => {
+        const isOther = roleSelect.value === "others";
+        otherInput.required = isOther;
+        if (!isOther) {
+          otherInput.value = "";
+          clearFieldError(otherInput);
+        }
+      });
+
+      function validateField(field) {
+        const group = field.closest(".form-group");
+        const errorSpan = group.querySelector(".error-msg");
+        const val = field.value.trim();
+
+        if (field.required && !val) {
+          group.classList.add("has-error");
+          errorSpan.textContent = "This field is required.";
+          return false;
+        }
+        clearFieldError(field);
+        return true;
+      }
+
+      function clearFieldError(field) {
+        const group = field.closest(".form-group");
+        group.classList.remove("has-error");
+        group.querySelector(".error-msg").textContent = "";
+      }
+
+      step1.querySelectorAll("input, select").forEach((field) => {
+        field.addEventListener("blur", () => validateField(field));
+        field.addEventListener("input", () => {
+          if (field.closest(".form-group").classList.contains("has-error")) {
+            validateField(field);
+          }
+        });
+      });
+
+      function validateStep1() {
+        let valid = true;
+        step1.querySelectorAll("input, select").forEach((field) => {
+          if (!validateField(field)) valid = false;
+        });
+        return valid;
+      }
+
+      function goToStep(targetStep) {
+        const isStep2 = targetStep === 2;
+        step1.hidden = isStep2;
+        step2.hidden = !isStep2;
+        dots[1].classList.toggle("active", isStep2);
+        stepLine.classList.toggle("active", isStep2);
+      }
+
+      nextBtn.addEventListener("click", () => {
+        if (validateStep1()) {
+          goToStep(2);
+          skillInput.focus();
+        }
+      });
+
+      backBtn.addEventListener("click", () => goToStep(1));
+
+      // --- Step 2 Skills Logic ---
+      function renderSuggestions(filterText = "") {
+        const query = filterText.trim().toLowerCase();
+        suggestionsBox.innerHTML = "";
+
+        const available = suggestedPool.filter(
+          (skill) =>
+            !selectedSkills.some((s) => s.toLowerCase() === skill.toLowerCase()) &&
+            skill.toLowerCase().includes(query)
+        );
+
+        if (available.length === 0) {
+          const msg = document.createElement("span");
+          msg.className = "empty-hint";
+          msg.textContent = query
+            ? `No preset match — press "Add" to include "${filterText.trim()}".`
+            : "All suggested skills added!";
+          suggestionsBox.appendChild(msg);
+          return;
+        }
+
+        available.forEach((skill) => {
+          const chip = document.createElement("button");
+          chip.type = "button";
+          chip.className = "skill-chip suggestion-chip";
+          chip.innerHTML = `<span>+</span> ${skill}`;
+          chip.addEventListener("click", () => addSkill(skill));
+          suggestionsBox.appendChild(chip);
+        });
+      }
+
+      function renderSelectedSkills() {
+        // Remove existing chips while keeping emptySkillsHint
+        selectedSkillsBox
+          .querySelectorAll(".selected-chip")
+          .forEach((el) => el.remove());
+
+        emptySkillsHint.hidden = selectedSkills.length > 0;
+        skillsHiddenInput.value = JSON.stringify(selectedSkills);
+
+        selectedSkills.forEach((skill) => {
+          const chip = document.createElement("span");
+          chip.className = "skill-chip selected-chip";
+          chip.textContent = skill;
+
+          const removeBtn = document.createElement("button");
+          removeBtn.type = "button";
+          removeBtn.className = "remove-skill";
+          removeBtn.setAttribute("aria-label", `Remove ${skill}`);
+          removeBtn.textContent = "×";
+          removeBtn.addEventListener("click", () => removeSkill(skill));
+
+          chip.appendChild(removeBtn);
+          selectedSkillsBox.appendChild(chip);
+        });
+      }
+
+      function addSkill(rawSkill) {
+        const clean = rawSkill.trim();
+        if (!clean) return;
+
+        // Prevent case-insensitive duplicates
+        const exists = selectedSkills.some(
+          (s) => s.toLowerCase() === clean.toLowerCase()
+        );
+        if (!exists) {
+          selectedSkills.push(clean);
+          skillsGroup.classList.remove("has-error");
+          skillsGroup.querySelector(".error-msg").textContent = "";
+        }
+
+        skillInput.value = "";
+        renderSelectedSkills();
+        renderSuggestions();
+        skillInput.focus();
+      }
+
+      function removeSkill(skillToRemove) {
+        selectedSkills = selectedSkills.filter((s) => s !== skillToRemove);
+        renderSelectedSkills();
+        renderSuggestions(skillInput.value);
+      }
+
+      skillInput.addEventListener("input", () => {
+        renderSuggestions(skillInput.value);
+      });
+
+      skillInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          addSkill(skillInput.value);
+        }
+      });
+
+      addSkillBtn.addEventListener("click", () => {
+        addSkill(skillInput.value);
+      });
+
+      // Initial render
+      renderSuggestions();
+
+      // Final Submit
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (selectedSkills.length === 0) {
+          skillsGroup.classList.add("has-error");
+          skillsGroup.querySelector(".error-msg").textContent =
+            "Please add at least one skill.";
+          skillInput.focus();
+          return;
+        }
+
+        const payload = {
+          name: document.getElementById("name").value.trim(),
+          role:
+            roleSelect.value === "others"
+              ? otherInput.value.trim()
+              : roleSelect.value,
+          skills: selectedSkills
+        };
+
+        console.log("Submitted payload:", payload);
+        alert(`Account created for ${payload.name} with ${payload.skills.length} skill(s)!`);
+      });
+    </script>
   </body>
 </html>
