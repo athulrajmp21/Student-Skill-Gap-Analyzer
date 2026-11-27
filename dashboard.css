@@ -35,20 +35,26 @@ body {
 
 /* App Shell Layout */
 .app-layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
   min-height: 100vh;
+  padding-left: 260px; /* Offsets the fixed sidebar width */
 }
 
 /* Sidebar */
 .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 260px;
+  height: 100vh;
+  overflow: hidden;
   background-color: var(--color-accent);
   border-right: 1px solid rgba(86, 28, 36, 0.14);
-  padding: 24px 18px;
+  padding: 26px 20px 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 24px;
+  z-index: 40;
 }
 
 .sidebar-top {
@@ -60,20 +66,20 @@ body {
 .brand {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   text-decoration: none;
   color: var(--color-primary);
-  padding-inline: 6px;
+  padding-inline: 4px;
 }
 
 .brand-badge {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 10px;
   display: grid;
   place-items: center;
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   background-color: var(--color-primary);
   color: var(--color-surface);
 }
@@ -81,16 +87,16 @@ body {
 .brand-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.15;
+  line-height: 1.18;
 }
 
 .brand-text strong {
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   font-weight: 800;
 }
 
 .brand-text span {
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 600;
   color: var(--color-secondary);
 }
@@ -98,21 +104,21 @@ body {
 .nav-menu {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  padding: 11px 14px;
+  padding: 12px 16px;
   border: none;
-  border-radius: 10px;
+  border-radius: 11px;
   background: transparent;
   color: var(--color-primary);
   font-family: inherit;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   font-weight: 700;
   text-align: left;
   cursor: pointer;
@@ -147,16 +153,16 @@ body {
 .sidebar-bottom {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .btn-sidebar-cta {
   display: block;
   text-align: center;
   text-decoration: none;
-  padding: 11px 14px;
+  padding: 10px 14px;
   border-radius: 10px;
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   font-weight: 800;
   background-color: var(--color-surface);
   color: var(--color-primary);
@@ -169,15 +175,104 @@ body {
   color: var(--color-surface);
 }
 
-.back-home-link {
-  text-align: center;
-  text-decoration: none;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--color-secondary);
+/* User Profile Card & Logout */
+.sidebar-user-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: rgba(250, 246, 240, 0.72);
+  border: 1px solid rgba(86, 28, 36, 0.14);
 }
 
-.back-home-link:hover {
+.user-profile-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.user-meta strong {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-meta span {
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-logout {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(166, 28, 28, 0.35);
+  background-color: transparent;
+  color: var(--color-error);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-logout:hover {
+  background-color: var(--color-error);
+  border-color: var(--color-error);
+  color: #ffffff;
+}
+
+.sidebar-footer-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-inline: 4px;
+}
+
+.back-home-link,
+.reset-text-btn {
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.back-home-link:hover,
+.reset-text-btn:hover {
   color: var(--color-primary);
   text-decoration: underline;
 }
@@ -213,29 +308,6 @@ body {
 .topbar h1 {
   font-size: clamp(1.4rem, 2.5vw, 1.85rem);
   font-weight: 800;
-}
-
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn-ghost {
-  padding: 9px 14px;
-  border-radius: 8px;
-  border: 1.5px solid var(--color-primary);
-  background: transparent;
-  color: var(--color-primary);
-  font-family: inherit;
-  font-size: 0.82rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.btn-ghost:hover {
-  background-color: rgba(86, 28, 36, 0.08);
 }
 
 .btn-primary-sm {
@@ -699,11 +771,11 @@ body {
   text-decoration: underline;
 }
 
-/* View 3: Benchmarks */
+/* View 3: Benchmarks Grid (2 columns for 8 roles) */
 .benchmark-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
 .benchmark-card {
@@ -788,41 +860,6 @@ body {
   background-color: var(--color-primary);
   color: var(--color-surface);
   cursor: default;
-}
-
-/* View 4: JSON Export */
-.json-preview {
-  padding: 16px;
-  border-radius: 10px;
-  background-color: #2B1115;
-  color: #F4E9DC;
-  font-size: 0.8rem;
-  line-height: 1.5;
-  max-height: 300px;
-  overflow: auto;
-}
-
-.export-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.btn-danger-outline {
-  padding: 11px 18px;
-  border-radius: 9px;
-  border: 1.5px solid var(--color-error);
-  background: transparent;
-  color: var(--color-error);
-  font-family: inherit;
-  font-size: 0.86rem;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.btn-danger-outline:hover {
-  background-color: var(--color-error);
-  color: #ffffff;
 }
 
 /* Responsive */

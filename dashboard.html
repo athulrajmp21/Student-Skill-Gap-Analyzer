@@ -34,10 +34,6 @@
               <span class="nav-icon">◎</span>
               <span>Role Benchmarks</span>
             </button>
-            <button type="button" class="nav-item" data-view="export">
-              <span class="nav-icon">⇩</span>
-              <span>Export &amp; Reset</span>
-            </button>
           </nav>
         </div>
 
@@ -45,7 +41,29 @@
           <a href="onboarding.html" class="btn-sidebar-cta">
             ✎ Edit Setup Wizard
           </a>
-          <a href="index.html" class="back-home-link">← Back to Home</a>
+
+          <!-- User Profile & Logout Footer -->
+          <div class="sidebar-user-card">
+            <div class="user-profile-info">
+              <div class="user-avatar" id="sidebarAvatar" aria-hidden="true">
+                U
+              </div>
+              <div class="user-meta">
+                <strong id="sidebarUserName">Guest User</strong>
+                <span id="sidebarUserRole">No Role Selected</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="btn-logout"
+              id="logoutBtn"
+              title="Log out and clear session"
+              aria-label="Log out"
+            >
+              ⎋ Logout
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -59,20 +77,20 @@
           </div>
 
           <div class="topbar-actions">
-            <button type="button" class="btn-ghost" id="loadSampleBtn">
-              Load Sample Profile
-            </button>
-            <a href="onboarding.html" class="btn-primary-sm">+ Update Skills</a>
+            <a href="onboarding.html" class="btn-primary-sm">+ Setup Wizard</a>
           </div>
         </header>
 
         <!-- Beginner Guided Next-Step Card -->
         <section class="guide-banner" id="guideBanner">
           <div class="guide-copy">
-            <span class="guide-badge" id="guideStepBadge">Next Recommended Step</span>
+            <span class="guide-badge" id="guideStepBadge"
+              >Next Recommended Step</span
+            >
             <h2 id="guideTitle">Let's set up your role profile</h2>
             <p id="guideDesc">
-              Start the 2-minute setup wizard or load a sample profile to explore how your skill readiness is calculated.
+              Start the quick setup wizard to select your target role, add your
+              skills, and check your readiness score.
             </p>
           </div>
           <div class="guide-actions" id="guideActions">
@@ -82,7 +100,6 @@
 
         <!-- VIEW 1: OVERVIEW -->
         <section class="view-panel active" id="view-overview">
-          <!-- 3 Simple KPI Cards -->
           <div class="kpi-grid">
             <article class="kpi-card">
               <div class="kpi-top">
@@ -93,7 +110,9 @@
               <div class="progress-bar">
                 <div class="progress-fill" id="kpiReadinessBar"></div>
               </div>
-              <p class="kpi-hint">Required core skills matched for your target role</p>
+              <p class="kpi-hint">
+                Required core skills matched for your target role
+              </p>
             </article>
 
             <article class="kpi-card">
@@ -102,7 +121,9 @@
                 <span class="kpi-tag">Stack</span>
               </div>
               <div class="kpi-value" id="kpiTotalSkills">0</div>
-              <p class="kpi-hint" id="kpiSkillSplit">0 required · 0 additional</p>
+              <p class="kpi-hint" id="kpiSkillSplit">
+                0 required · 0 additional
+              </p>
             </article>
 
             <article class="kpi-card">
@@ -110,12 +131,15 @@
                 <span class="kpi-label">Average Proficiency</span>
                 <span class="kpi-tag" id="kpiAvgLabel">—</span>
               </div>
-              <div class="kpi-value" id="kpiAvgScore">0.0 <small>/ 5</small></div>
-              <p class="kpi-hint">Self-rated confidence across your active skills</p>
+              <div class="kpi-value" id="kpiAvgScore">
+                0.0 <small>/ 5</small>
+              </div>
+              <p class="kpi-hint">
+                Self-rated confidence across your active skills
+              </p>
             </article>
           </div>
 
-          <!-- Two-Column Overview Content -->
           <div class="overview-split">
             <!-- Left: Skill Proficiency Bars -->
             <div class="panel-card">
@@ -146,13 +170,15 @@
           </div>
         </section>
 
-        <!-- VIEW 2: MY SKILLS (Interactive Quick-Add & Rating Editor) -->
+        <!-- VIEW 2: MY SKILLS -->
         <section class="view-panel" id="view-skills" hidden>
           <div class="panel-card">
             <div class="panel-header">
               <div>
                 <h3>Manage Your Skills</h3>
-                <p>Add new skills or adjust your 1–5 proficiency ratings directly</p>
+                <p>
+                  Add new skills or adjust your 1–5 proficiency ratings directly
+                </p>
               </div>
             </div>
 
@@ -183,34 +209,14 @@
             <div class="panel-header">
               <div>
                 <h3>Compare Against Role Benchmarks</h3>
-                <p>See how your current skills stack up against built-in roles</p>
+                <p>
+                  Explore 8 industry role templates and see how your current
+                  skills match up
+                </p>
               </div>
             </div>
 
             <div class="benchmark-cards" id="benchmarkCards"></div>
-          </div>
-        </section>
-
-        <!-- VIEW 4: EXPORT & SETTINGS -->
-        <section class="view-panel" id="view-export" hidden>
-          <div class="panel-card">
-            <div class="panel-header">
-              <div>
-                <h3>Export JSON &amp; Data Controls</h3>
-                <p>Your profile is stored privately in your browser's localStorage</p>
-              </div>
-            </div>
-
-            <pre class="json-preview" id="jsonPreviewBox">{}</pre>
-
-            <div class="export-actions">
-              <button type="button" class="btn-primary" id="copyJsonDashBtn">
-                Copy JSON Report
-              </button>
-              <button type="button" class="btn-danger-outline" id="clearAllDashBtn">
-                Clear All Saved Data
-              </button>
-            </div>
           </div>
         </section>
       </div>
@@ -220,21 +226,66 @@
       const STORAGE_KEY = "account_onboarding_state_v1";
 
       const roleConfig = {
-        developer: {
-          label: "Developer",
-          description: "Frontend & backend software engineering fundamentals.",
-          required: ["JavaScript", "HTML & CSS", "Git"]
+        frontend: {
+          label: "Frontend Developer",
+          description:
+            "Responsive interfaces, modern JavaScript frameworks, and web accessibility.",
+          required: ["HTML & CSS", "JavaScript", "React", "Git"],
+        },
+        backend: {
+          label: "Backend Developer",
+          description:
+            "Server-side APIs, relational databases, authentication, and deployment.",
+          required: ["Node.js", "Python", "SQL", "REST APIs", "Git"],
+        },
+        fullstack: {
+          label: "Full-Stack Developer",
+          description:
+            "End-to-end web architecture spanning UI, APIs, and database layers.",
+          required: [
+            "HTML & CSS",
+            "JavaScript",
+            "React",
+            "Node.js",
+            "SQL",
+            "Git",
+          ],
         },
         designer: {
-          label: "Designer",
-          description: "Product interface design, user flows, and wireframing.",
-          required: ["Figma", "UI/UX Design", "Wireframing"]
+          label: "UI/UX Designer",
+          description:
+            "User research, interactive wireframing, and scalable design systems.",
+          required: ["Figma", "UI/UX Design", "Wireframing", "Prototyping"],
+        },
+        data_analyst: {
+          label: "Data Analyst",
+          description:
+            "Data cleaning, SQL querying, statistical insights, and dashboarding.",
+          required: ["SQL", "Python", "Excel", "Data Visualization"],
+        },
+        devops: {
+          label: "DevOps Engineer",
+          description:
+            "CI/CD automation, containerization, Linux servers, and cloud infrastructure.",
+          required: ["Linux", "Docker", "CI/CD", "Cloud Computing", "Git"],
         },
         manager: {
-          label: "Manager",
-          description: "Agile project delivery, planning, and team communication.",
-          required: ["Project Management", "Agile", "Communication"]
-        }
+          label: "Product Manager",
+          description:
+            "Product strategy, agile sprint execution, and cross-functional alignment.",
+          required: [
+            "Product Strategy",
+            "Agile",
+            "Roadmapping",
+            "Communication",
+          ],
+        },
+        qa_engineer: {
+          label: "QA / Test Engineer",
+          description:
+            "Automated test suites, bug tracking, API validation, and release quality.",
+          required: ["Test Automation", "API Testing", "Bug Tracking", "Git"],
+        },
       };
 
       const ratingLabels = {
@@ -242,10 +293,9 @@
         2: "Basic",
         3: "Intermediate",
         4: "Advanced",
-        5: "Expert"
+        5: "Expert",
       };
 
-      // App State
       let state = {
         name: "",
         role: "",
@@ -254,15 +304,14 @@
         isSubmitted: false,
         customRequiredSkills: [],
         selectedSkills: [],
-        skillRatings: {}
+        skillRatings: {},
       };
 
       function loadState() {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
           if (raw) {
-            const parsed = JSON.parse(raw);
-            state = { ...state, ...parsed };
+            state = { ...state, ...JSON.parse(raw) };
           }
         } catch (err) {
           console.warn("Could not read localStorage:", err);
@@ -291,29 +340,16 @@
         const required = getRequiredSkills();
         const selected = state.selectedSkills || [];
         return required.filter(
-          (req) => !selected.some((s) => s.toLowerCase() === req.toLowerCase())
+          (req) => !selected.some((s) => s.toLowerCase() === req.toLowerCase()),
         );
       }
 
-      function buildExportPayload() {
-        const required = getRequiredSkills();
-        const missing = getMissingSkills();
-        return {
-          name: state.name || "Guest User",
-          role: getRoleLabel(),
-          requiredSkillsForRole: required,
-          missingRequiredSkills: missing,
-          coverage: {
-            matched: required.length - missing.length,
-            totalRequired: required.length
-          },
-          ratedSkills: state.selectedSkills.map((skill) => ({
-            skill,
-            isRequired: required.some((r) => r.toLowerCase() === skill.toLowerCase()),
-            rating: state.skillRatings[skill] || 3,
-            level: ratingLabels[state.skillRatings[skill] || 3]
-          }))
-        };
+      function getInitials(fullName) {
+        const clean = (fullName || "").trim();
+        if (!clean) return "G";
+        const parts = clean.split(/\s+/);
+        if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
       }
 
       // Navigation Tabs
@@ -339,7 +375,9 @@
 
       // Render All Dashboard Sections
       function renderDashboard() {
-        const hasProfile = Boolean(state.name || state.role || state.selectedSkills.length > 0);
+        const hasProfile = Boolean(
+          state.name || state.role || state.selectedSkills.length > 0,
+        );
         const required = getRequiredSkills();
         const missing = getMissingSkills();
         const selected = state.selectedSkills;
@@ -350,8 +388,15 @@
           : "Welcome to SkillGap";
         document.getElementById("headerRoleTag").textContent = hasProfile
           ? `Target Role · ${getRoleLabel()}`
-          : "Beginner-Friendly Readiness Studio";
+          : "Role Readiness Studio";
         document.getElementById("navSkillCount").textContent = selected.length;
+
+        document.getElementById("sidebarAvatar").textContent = getInitials(
+          state.name,
+        );
+        document.getElementById("sidebarUserName").textContent =
+          state.name || "Guest User";
+        document.getElementById("sidebarUserRole").textContent = getRoleLabel();
 
         // Guided Next-Step Banner
         const guideBadge = document.getElementById("guideStepBadge");
@@ -363,37 +408,47 @@
           guideBadge.textContent = "Step 1 · Getting Started";
           guideTitle.textContent = "Create your skill profile in 2 minutes";
           guideDesc.textContent =
-            "Pick a role, check off your skills, and see what you need to learn next—or load a sample profile to test the dashboard.";
+            "Select your target role from 8 built-in tracks (or define a custom role), add your skills, and see what you need to learn next.";
           guideActions.innerHTML = `<a href="onboarding.html" class="btn-primary">Start Setup Wizard →</a>`;
         } else if (missing.length > 0) {
           guideBadge.textContent = "Action Recommended";
           guideTitle.textContent = `You are missing ${missing.length} required skill${missing.length > 1 ? "s" : ""} for ${getRoleLabel()}`;
           guideDesc.textContent = `Add ${missing.join(", ")} to reach 100% core role coverage.`;
           guideActions.innerHTML = `<button type="button" class="btn-primary" id="bannerFixAllBtn">+ Add Missing Skills</button>`;
-          document.getElementById("bannerFixAllBtn").addEventListener("click", () => {
-            missing.forEach((skill) => addSkillDirect(skill, 3));
-          });
+          document
+            .getElementById("bannerFixAllBtn")
+            .addEventListener("click", () => {
+              missing.forEach((skill) => addSkillDirect(skill, 3));
+            });
         } else {
           guideBadge.textContent = "All Core Requirements Met";
-          guideTitle.textContent = `Great job! You match 100% of ${getRoleLabel()} core skills.`;
+          guideTitle.textContent = `You match 100% of ${getRoleLabel()} core skills.`;
           guideDesc.textContent =
-            "Fine-tune your 1–5 proficiency ratings below or export your JSON report.";
-          guideActions.innerHTML = `<button type="button" class="btn-primary" id="bannerExportBtn">View JSON Export →</button>`;
-          document.getElementById("bannerExportBtn").addEventListener("click", () => {
-            switchView("export");
-          });
+            "Fine-tune your 1–5 proficiency ratings below or compare your stack against other roles in Role Benchmarks.";
+          guideActions.innerHTML = `<button type="button" class="btn-primary" id="bannerBenchBtn">Compare Other Roles →</button>`;
+          document
+            .getElementById("bannerBenchBtn")
+            .addEventListener("click", () => {
+              switchView("benchmarks");
+            });
         }
 
         // KPI Metrics
         const matched = required.length - missing.length;
-        const pct = required.length > 0 ? Math.round((matched / required.length) * 100) : (selected.length > 0 ? 100 : 0);
+        const pct =
+          required.length > 0
+            ? Math.round((matched / required.length) * 100)
+            : selected.length > 0
+              ? 100
+              : 0;
 
         document.getElementById("kpiReadinessTag").textContent = `${pct}%`;
-        document.getElementById("kpiReadinessValue").textContent = `${matched} / ${required.length}`;
+        document.getElementById("kpiReadinessValue").textContent =
+          `${matched} / ${required.length}`;
         document.getElementById("kpiReadinessBar").style.width = `${pct}%`;
 
         const reqCount = selected.filter((s) =>
-          required.some((r) => r.toLowerCase() === s.toLowerCase())
+          required.some((r) => r.toLowerCase() === s.toLowerCase()),
         ).length;
         const extraCount = selected.length - reqCount;
 
@@ -401,13 +456,17 @@
         document.getElementById("kpiSkillSplit").textContent =
           `${reqCount} required · ${extraCount} additional`;
 
-        const scores = selected.map((s) => state.skillRatings[s] || 0).filter((n) => n > 0);
-        const avg = scores.length > 0
-          ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)
-          : "0.0";
+        const scores = selected
+          .map((s) => state.skillRatings[s] || 0)
+          .filter((n) => n > 0);
+        const avg =
+          scores.length > 0
+            ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)
+            : "0.0";
         const roundedAvg = Math.round(Number(avg));
 
-        document.getElementById("kpiAvgScore").innerHTML = `${avg} <small>/ 5</small>`;
+        document.getElementById("kpiAvgScore").innerHTML =
+          `${avg} <small>/ 5</small>`;
         document.getElementById("kpiAvgLabel").textContent = roundedAvg
           ? ratingLabels[roundedAvg]
           : "Not Rated";
@@ -424,7 +483,9 @@
           `;
         } else {
           selected.forEach((skill) => {
-            const isReq = required.some((r) => r.toLowerCase() === skill.toLowerCase());
+            const isReq = required.some(
+              (r) => r.toLowerCase() === skill.toLowerCase(),
+            );
             const score = state.skillRatings[skill] || 3;
 
             const row = document.createElement("div");
@@ -467,7 +528,7 @@
         if (!state.role) {
           gapsContainer.innerHTML = `
             <div class="empty-box">
-              <p>Select a target role in the setup wizard to see required skill benchmarks.</p>
+              <p>Select a target role in <strong>Role Benchmarks</strong> or the setup wizard to see required skills.</p>
             </div>
           `;
         } else if (missing.length === 0) {
@@ -495,25 +556,15 @@
           });
         }
 
-        // View 2: Manage Skills List
         renderManageSkillsList(required);
-
-        // View 3: Role Benchmarks
         renderBenchmarkCards();
-
-        // View 4: JSON Preview
-        document.getElementById("jsonPreviewBox").textContent = JSON.stringify(
-          buildExportPayload(),
-          null,
-          2
-        );
       }
 
       function addSkillDirect(rawName, rating = 3) {
         const clean = rawName.trim();
         if (!clean) return;
         const exists = state.selectedSkills.some(
-          (s) => s.toLowerCase() === clean.toLowerCase()
+          (s) => s.toLowerCase() === clean.toLowerCase(),
         );
         if (!exists) {
           state.selectedSkills.push(clean);
@@ -534,7 +585,9 @@
         }
 
         state.selectedSkills.forEach((skill) => {
-          const isReq = required.some((r) => r.toLowerCase() === skill.toLowerCase());
+          const isReq = required.some(
+            (r) => r.toLowerCase() === skill.toLowerCase(),
+          );
           const score = state.skillRatings[skill] || 3;
 
           const card = document.createElement("div");
@@ -549,7 +602,7 @@
                 ${[1, 2, 3, 4, 5]
                   .map(
                     (n) =>
-                      `<button type="button" class="rate-pill ${score === n ? "active" : ""}" data-score="${n}">${n}</button>`
+                      `<button type="button" class="rate-pill ${score === n ? "active" : ""}" data-score="${n}">${n}</button>`,
                   )
                   .join("")}
               </div>
@@ -565,12 +618,16 @@
             });
           });
 
-          card.querySelector(".btn-remove-row").addEventListener("click", () => {
-            state.selectedSkills = state.selectedSkills.filter((s) => s !== skill);
-            delete state.skillRatings[skill];
-            saveState();
-            renderDashboard();
-          });
+          card
+            .querySelector(".btn-remove-row")
+            .addEventListener("click", () => {
+              state.selectedSkills = state.selectedSkills.filter(
+                (s) => s !== skill,
+              );
+              delete state.skillRatings[skill];
+              saveState();
+              renderDashboard();
+            });
 
           list.appendChild(card);
         });
@@ -583,7 +640,9 @@
         Object.entries(roleConfig).forEach(([key, cfg]) => {
           const isCurrent = state.role === key;
           const matched = cfg.required.filter((req) =>
-            state.selectedSkills.some((s) => s.toLowerCase() === req.toLowerCase())
+            state.selectedSkills.some(
+              (s) => s.toLowerCase() === req.toLowerCase(),
+            ),
           );
 
           const card = document.createElement("div");
@@ -602,10 +661,9 @@
                   const hasIt = matched.includes(req);
                   return `<span class="bench-chip ${hasIt ? "has" : "missing"}">${hasIt ? "✓" : "+"} ${req}</span>`;
                 })
-                .join("")}
-            </div>
-            <button type="button" class="btn-switch-role">
-              ${isCurrent ? "Current Target Role" : `Set ${cfg.label} as Target Role`}
+                .join(
+                  "",
+                )} </div> <button type="button" class="btn-switch-role"> ${isCurrent ? "Current Target Role" : `Set ${cfg.label} as Target`}
             </button>
           `;
 
@@ -624,70 +682,40 @@
       }
 
       // Quick Add Skill Form
-      document.getElementById("quickAddSkillForm").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const input = document.getElementById("quickSkillInput");
-        const rating = Number(document.getElementById("quickSkillRating").value);
-        if (!input.value.trim()) return;
-        addSkillDirect(input.value, rating);
-        input.value = "";
-      });
+      document
+        .getElementById("quickAddSkillForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          const input = document.getElementById("quickSkillInput");
+          const rating = Number(
+            document.getElementById("quickSkillRating").value,
+          );
+          if (!input.value.trim()) return;
+          addSkillDirect(input.value, rating);
+          input.value = "";
+        });
 
-      // Load Sample Data Button (Great for Beginners Exploring)
-      document.getElementById("loadSampleBtn").addEventListener("click", () => {
-        state = {
-          name: "Alex Rivera",
-          role: "developer",
-          otherRole: "",
-          currentStepIndex: 2,
-          isSubmitted: true,
-          customRequiredSkills: [],
-          selectedSkills: ["JavaScript", "HTML & CSS", "React", "Python"],
-          skillRatings: {
-            "JavaScript": 4,
-            "HTML & CSS": 5,
-            "React": 3,
-            "Python": 4
-          }
-        };
-        saveState();
-        renderDashboard();
-      });
-
-      // Export & Clear Buttons
-      document.getElementById("copyJsonDashBtn").addEventListener("click", async (e) => {
-        const btn = e.currentTarget;
-        const json = JSON.stringify(buildExportPayload(), null, 2);
-        try {
-          await navigator.clipboard.writeText(json);
-        } catch {
-          const ta = document.createElement("textarea");
-          ta.value = json;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand("copy");
-          ta.remove();
-        }
-        btn.textContent = "Copied to Clipboard!";
-        setTimeout(() => {
-          btn.textContent = "Copy JSON Report";
-        }, 2000);
-      });
-
-      document.getElementById("clearAllDashBtn").addEventListener("click", () => {
+      // Reset Profile Button
+      //   document
+      //     .getElementById("resetProfileBtn")
+      //     .addEventListener("click", () => {
+      //       localStorage.removeItem(STORAGE_KEY);
+      //       state = {
+      //         name: "",
+      //         role: "",
+      //         otherRole: "",
+      //         currentStepIndex: 0,
+      //         isSubmitted: false,
+      //         customRequiredSkills: [],
+      //         selectedSkills: [],
+      //         skillRatings: {},
+      //       };
+      //       renderDashboard();
+      //       switchView("overview");
+      //     });
+      document.getElementById("logoutBtn").addEventListener("click", () => {
         localStorage.removeItem(STORAGE_KEY);
-        state = {
-          name: "",
-          role: "",
-          otherRole: "",
-          currentStepIndex: 0,
-          isSubmitted: false,
-          customRequiredSkills: [],
-          selectedSkills: [],
-          skillRatings: {}
-        };
-        renderDashboard();
-        switchView("overview");
+        window.location.href = "index.html";
       });
 
       // Boot

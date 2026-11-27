@@ -1,41 +1,99 @@
 const STORAGE_KEY = "account_onboarding_state_v1";
 
 const roleConfig = {
-  developer: {
-    label: "Developer",
-    required: ["JavaScript", "HTML & CSS", "Git"],
+  frontend: {
+    label: "Frontend Developer",
+    required: ["HTML & CSS", "JavaScript", "React", "Git"],
     suggested: [
-      "React",
-      "Node.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Next.js",
+      "REST APIs",
+      "Accessibility",
+      "Testing",
+    ],
+  },
+  backend: {
+    label: "Backend Developer",
+    required: ["Node.js", "Python", "SQL", "REST APIs", "Git"],
+    suggested: [
+      "PostgreSQL",
+      "Docker",
+      "Authentication",
+      "Redis",
+      "System Design",
+      "FastAPI",
+    ],
+  },
+  fullstack: {
+    label: "Full-Stack Developer",
+    required: ["HTML & CSS", "JavaScript", "React", "Node.js", "SQL", "Git"],
+    suggested: [
       "TypeScript",
       "Python",
-      "SQL",
-      "REST APIs",
       "Docker",
+      "REST APIs",
+      "Cloud Deployment",
+      "CI/CD",
     ],
   },
   designer: {
-    label: "Designer",
-    required: ["Figma", "UI/UX Design", "Wireframing"],
+    label: "UI/UX Designer",
+    required: ["Figma", "UI/UX Design", "Wireframing", "Prototyping"],
     suggested: [
-      "Prototyping",
       "Design Systems",
-      "Typography",
       "User Research",
-      "Adobe XD",
+      "Typography",
       "Accessibility",
+      "Usability Testing",
+    ],
+  },
+  data_analyst: {
+    label: "Data Analyst",
+    required: ["SQL", "Python", "Excel", "Data Visualization"],
+    suggested: [
+      "Pandas",
+      "Power BI",
+      "Tableau",
+      "Statistics",
+      "Data Cleaning",
+      "A/B Testing",
+    ],
+  },
+  devops: {
+    label: "DevOps Engineer",
+    required: ["Linux", "Docker", "CI/CD", "Cloud Computing", "Git"],
+    suggested: [
+      "Kubernetes",
+      "Terraform",
+      "AWS",
+      "Bash Scripting",
+      "Monitoring",
+      "Networking",
     ],
   },
   manager: {
-    label: "Manager",
-    required: ["Project Management", "Agile", "Communication"],
+    label: "Product Manager",
+    required: ["Product Strategy", "Agile", "Roadmapping", "Communication"],
     suggested: [
-      "Scrum",
-      "Roadmapping",
-      "Risk Management",
+      "User Stories",
       "Stakeholder Alignment",
       "Jira",
-      "Budgeting",
+      "A/B Testing",
+      "Prioritization",
+      "Metrics",
+    ],
+  },
+  qa_engineer: {
+    label: "QA / Test Engineer",
+    required: ["Test Automation", "API Testing", "Bug Tracking", "Git"],
+    suggested: [
+      "Selenium",
+      "Playwright",
+      "Cypress",
+      "Postman",
+      "Performance Testing",
+      "CI/CD",
     ],
   },
 };
@@ -255,8 +313,6 @@ function applyStepAnimation(element, direction) {
   if (direction === "next") element.classList.add("slide-next");
   if (direction === "prev") element.classList.add("slide-prev");
 }
-
-
 
 document.querySelectorAll('[data-nav="prev"]').forEach((btn) => {
   btn.addEventListener("click", () => {
